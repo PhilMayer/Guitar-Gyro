@@ -11,18 +11,24 @@ class Root extends React.Component {
     super(props)
     this.state = {
       playing: "STOPPED",
-      position: 0
+      green1: -130,
+      green2: -170,
+      notes: []
+      id: 1
+
     }
     // this.startGame();
   }
 
   startGame () {
     setInterval(() => {
-      const nextPos = this.state.position + 1
-      return this.setState({position: nextPos})
-    }, 1);
+      const green1 = this.state.green1 + 1
+      const green2 = this.state.green2 + 1
+      this.setState({green1: green1, green2: green2})
+      // this.state.id += 1
+      // addElement("circle-parent", "div style=position:'absolute', top: this.state.green1, left: '50%'", this.state.id)
+    }, 10);
   }
-
 
 
   render () {
@@ -33,8 +39,9 @@ class Root extends React.Component {
           url="../game/audio/SummerKnights.mp3"
           playStatus={this.state.playing} />
 
-        <div style={{position:'relative'}}>
-          <div style={{position:'absolute', top: this.state.position, left: '50%'}} className="circle"></div>
+        <div id="circle-parent" style={{position:'relative'}}>
+          <div style={{position:'absolute', top: this.state.green1, left: '50%'}} className="circle"></div>
+          <div style={{position:'absolute', top: this.state.green2, left: '50%'}} className="circle"></div>
         </div>
 
         <div className="play-button-holder">
