@@ -19,57 +19,38 @@ export const randomCircle = (circleColor) => {
 }
 
 export const drawButton = (stage, color) => {
-  // var border = new createjs.Shape();
-  // border.graphics.beginStroke("#00FFFF");
-  // border.graphics.setStrokeStyle(1);
-  // border.snapToPixel = true;
-  // border.graphics.drawCircle(0, 0, 35, 309);
-  // border.x = 200;
-  // border.y = 650;
-  // stage.addChild(border)
-    // let border = new createjs.Shape();
-    //
-    // border.graphics.setStrokeStyle(1);
-    // border.snapToPixel = true;
-    // border.graphics.drawCircle(0, 0, 35, 309);
-    // border.y = 650;
-    //
     switch (color) {
       case "red":
-        var border = new createjs.Shape();
-        border.graphics.beginStroke("#FF0000");
-        border.graphics.setStrokeStyle(1);
-        border.snapToPixel = true;
-        border.graphics.drawCircle(0, 0, 35, 309);
-        border.x = 100;
-        border.y = 650;
-        stage.addChild(border)
-        return border
+        var button = new createjs.Shape();
+        button.graphics.beginStroke("#FF0000");
+        button.graphics.setStrokeStyle(1);
+        button.snapToPixel = true;
+        button.graphics.drawCircle(0, 0, 40, 309);
+        button.x = 100;
+        button.y = 650;
+        stage.addChild(button)
+        return button
       case "blue":
-        var border = new createjs.Shape();
-        border.graphics.beginStroke("#00FFFF");
-        border.graphics.setStrokeStyle(1);
-        border.snapToPixel = true;
-        border.graphics.drawCircle(0, 0, 35, 309);
-        border.x = 200;
-        border.y = 650;
-        stage.addChild(border)
-        return border
+        var button = new createjs.Shape();
+        button.graphics.beginStroke("#00FFFF");
+        button.graphics.setStrokeStyle(1);
+        button.snapToPixel = true;
+        button.graphics.drawCircle(0, 0, 40, 309);
+        button.x = 200;
+        button.y = 650;
+        stage.addChild(button)
+        return button
       case "green":
-        var border = new createjs.Shape();
-        border.graphics.beginStroke("#00FF00");
-        border.graphics.setStrokeStyle(1);
-        border.snapToPixel = true;
-        border.graphics.drawCircle(0, 0, 35, 309);
-        border.x = 300;
-        border.y = 650;
-        stage.addChild(border)
-        return border
+        var button = new createjs.Shape();
+        button.graphics.beginStroke("#00FF00");
+        button.graphics.setStrokeStyle(1);
+        button.snapToPixel = true;
+        button.graphics.drawCircle(0, 0, 40, 309);
+        button.x = 300;
+        button.y = 650;
+        stage.addChild(button)
+        return button
       default:
         return null;
     }
-
-
-
-  // }
 }
