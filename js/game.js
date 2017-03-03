@@ -1,5 +1,5 @@
 import {randomCircle, drawButton} from './circle.js';
-import {playMusic} from './melody';
+import {playMusic, melody} from './melody';
 
 document.addEventListener("DOMContentLoaded", () => {
   new Game();
@@ -19,10 +19,6 @@ class Game {
     createjs.Ticker.setFPS(60);
 
     this.drawLetters();
-
-    this.redHit = false;
-    this.blueHit = false;
-    this.greenHit = false;
 
     this.redPressed = false;
     this.bluePressed = false;
@@ -45,36 +41,32 @@ class Game {
     const letters = ["S", "E", "F"]
     let xCoord = 92;
     letters.forEach(letter => {
-      let toDraw = new createjs.Text(letter, "25px Arial");
-      toDraw.x = xCoord;
-      toDraw.y = 690;
+      let buttonLetter = new createjs.Text(letter, "25px Arial");
+      buttonLetter.x = xCoord;
+      buttonLetter.y = 690;
       xCoord += 100;
-      this.stage.addChild(toDraw);
+      this.stage.addChild(buttonLetter);
     })
   }
 
   keyPressed(e) {
     const key = e.keyCode;
-    // this.strumming = key === 73 || key === 74
-
 
     if (key === 83) {
       this.redPressed = true;
       this.redButton.graphics.clear()
         .beginFill("#FF0000").drawCircle(0, 0, 40, 309).endFill();
     } else if (key === 69) {
+      this.bluePressed = true;
       this.blueButton.graphics.clear()
         .beginFill("#00FFFF").drawCircle(0, 0, 40, 309).endFill();
     } else if (key === 70) {
+      this.greenPressed = true;
       this.greenButton.graphics.clear()
         .beginFill("#00FF00").drawCircle(0, 0, 40, 309).endFill();
     } else if (key === 73 || key === 74) {
       this.strumming = true
     }
-
-    // if (this.redPressed && strumming) {
-    //   this.redHit = true;
-    // }
   }
 
   keyReleased(e) {
@@ -84,9 +76,11 @@ class Game {
       this.redButton.graphics.clear()
       this.redButton = drawButton(this.stage, "red");
     } else if (key === 69) {
+      this.bluePressed = false;
       this.blueButton.graphics.clear()
       this.blueButton = drawButton(this.stage, "blue");
     } else if (key === 70) {
+      this.greenPressed = false;
       this.greenButton.graphics.clear()
       this.greenButton = drawButton(this.stage, "green");
     } else if (key === 73 || key === 74) {
@@ -96,6 +90,7 @@ class Game {
 
   run () {
     playMusic();
+
     const colors = ["red", "blue", "green"]
     setInterval(() => {
       const circleColor = colors[Math.floor(Math.random() * colors.length)];
@@ -108,9 +103,11 @@ class Game {
           this.stage.removeChild(circle);
         } else if (circle.y > 830) {
             if (this.redPressed && this.strumming && circleColor === "red") {
-
               this.stage.removeChild(circle);
-              this.redHit = false;
+            } else if (this.bluePressed && this.strumming && circleColor === "blue") {
+              this.stage.removeChild(circle);
+            } else if (this.greenPressed && this.strumming && circleColor === "green") {
+              this.stage.removeChild(circle);
             }
         }
       });
