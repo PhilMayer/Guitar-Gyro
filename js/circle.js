@@ -25,7 +25,7 @@ export const drawButton = (stage, color) => {
         button.graphics.beginStroke("#FF0000");
         button.graphics.setStrokeStyle(1);
         button.snapToPixel = true;
-        button.graphics.drawCircle(0, 0, 40, 309);
+        button.graphics.drawCircle(0, 0, 25, 309);
         button.x = 100;
         button.y = 650;
         stage.addChild(button)
@@ -35,7 +35,7 @@ export const drawButton = (stage, color) => {
         button.graphics.beginStroke("#00FFFF");
         button.graphics.setStrokeStyle(1);
         button.snapToPixel = true;
-        button.graphics.drawCircle(0, 0, 40, 309);
+        button.graphics.drawCircle(0, 0, 25, 309);
         button.x = 200;
         button.y = 650;
         stage.addChild(button)
@@ -45,7 +45,7 @@ export const drawButton = (stage, color) => {
         button.graphics.beginStroke("#00FF00");
         button.graphics.setStrokeStyle(1);
         button.snapToPixel = true;
-        button.graphics.drawCircle(0, 0, 40, 309);
+        button.graphics.drawCircle(0, 0, 25, 309);
         button.x = 300;
         button.y = 650;
         stage.addChild(button)

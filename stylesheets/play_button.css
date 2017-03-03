@@ -22,7 +22,8 @@ h1 {
 }
 
 .play-button-holder {
-  position: relative;
+  position: absolute;
+  right: 200px;
   height: 100px;
 }
 
@@ -46,7 +47,7 @@ h1 {
 }
 
 .triangle:hover {
-  color: #33FF00
+  color: #00FF00
 }
 
 .circle {
