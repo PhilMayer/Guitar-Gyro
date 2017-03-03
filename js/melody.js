@@ -83,7 +83,7 @@ export const melody = [
 export const playMusic = () => {
   let ac = new AudioContext(),
   when = ac.currentTime,
-  tempo = 152,
+  tempo = 120,
   sequence1,
   sequence2,
 

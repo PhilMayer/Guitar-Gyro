@@ -20,21 +20,37 @@ class Game {
 
     this.drawLetters();
 
+    this.misses = 0;
+    this.hits = 0;
+
+    this.scoreboard = this.drawScoreboard();
+    this.scoreboard.addEventListener("tick", () => {
+      this.updateScore()
+    })
+
+    this.strumming = false;
+
     this.redPressed = false;
     this.bluePressed = false;
     this.greenPressed = false;
 
-    this.strumming = false;
-
-    window.redHit = this.redHit
-    window.redPressed = this.redPressed
 
     this.redButton = drawButton(this.stage, "red");
     this.blueButton = drawButton(this.stage, "blue");
     this.greenButton = drawButton(this.stage, "green");
 
+
     this.run = this.run.bind(this);
     this.run();
+  }
+
+  run () {
+    playMusic();
+    this.generateNotes();
+  }
+
+  accuracy () {
+    return Math.round((this.hits / this.hits + this.misses) * 100) || 100;
   }
 
   drawLetters () {
@@ -47,6 +63,23 @@ class Game {
       xCoord += 100;
       this.stage.addChild(buttonLetter);
     })
+  }
+
+  drawScoreboard () {
+    const accuracy = this.accuracy();
+
+    let displayAccuracy = new createjs.Text(accuracy.toString(), "25px Arial");
+    displayAccuracy.x = 400;
+    displayAccuracy.y = 690;
+    this.stage.addChild(displayAccuracy);
+
+    return displayAccuracy
+  }
+
+  updateScore () {
+    const accuracy = this.accuracy();
+    console.log(accuracy)
+    this.scoreboard.text = accuracy;
   }
 
   keyPressed(e) {
@@ -88,9 +121,12 @@ class Game {
     }
   }
 
-  run () {
-    playMusic();
+  handleHit (circle) {
+    this.hits += 1;
+    this.stage.removeChild(circle);
+  }
 
+  generateNotes () {
     const colors = ["red", "blue", "green"]
     setInterval(() => {
       const circleColor = colors[Math.floor(Math.random() * colors.length)];
@@ -100,14 +136,15 @@ class Game {
       circle.addEventListener("tick", () => {
         circle.y += 8;
         if (circle.y === 1100) {
+          this.misses += 1;
           this.stage.removeChild(circle);
         } else if (circle.y > 830) {
             if (this.redPressed && this.strumming && circleColor === "red") {
-              this.stage.removeChild(circle);
+              this.handleHit(circle);
             } else if (this.bluePressed && this.strumming && circleColor === "blue") {
-              this.stage.removeChild(circle);
+              this.handleHit(circle);
             } else if (this.greenPressed && this.strumming && circleColor === "green") {
-              this.stage.removeChild(circle);
+              this.handleHit(circle);
             }
         }
       });
