@@ -1,4 +1,5 @@
 import {randomCircle, drawButton} from './circle.js';
+import {playMusic} from './melody';
 
 document.addEventListener("DOMContentLoaded", () => {
   new Game();
@@ -94,6 +95,7 @@ class Game {
   }
 
   run () {
+    playMusic();
     const colors = ["red", "blue", "green"]
     setInterval(() => {
       const circleColor = colors[Math.floor(Math.random() * colors.length)];
@@ -106,7 +108,7 @@ class Game {
           this.stage.removeChild(circle);
         } else if (circle.y > 830) {
             if (this.redPressed && this.strumming && circleColor === "red") {
-              
+
               this.stage.removeChild(circle);
               this.redHit = false;
             }
