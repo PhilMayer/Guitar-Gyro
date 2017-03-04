@@ -63,7 +63,7 @@ class Game {
   }
 
   drawLetters () {
-    const letters = ["S", "E", "F"]
+    const letters = ["S", "D", "F"]
     let xCoord = 92;
     letters.forEach(letter => {
       let buttonLetter = new createjs.Text(letter, "25px Arial");
@@ -90,10 +90,6 @@ class Game {
     return displayAccuracy
   }
 
-  updateScore () {
-    const accuracy = this.accuracy().toString() + "%";
-    this.scoreboard.text = accuracy;
-  }
 
   keyPressed(e) {
     const key = e.keyCode;
@@ -102,7 +98,7 @@ class Game {
       this.redPressed = true;
       this.redButton.graphics.clear()
         .beginFill("#FF0000").drawCircle(0, 0, 25, 309).endFill();
-    } else if (key === 69 && !this.redPressed && !this.greenPressed) {
+    } else if (key === 68 && !this.redPressed && !this.greenPressed) {
       this.bluePressed = true;
       this.blueButton.graphics.clear()
         .beginFill("#00FFFF").drawCircle(0, 0, 25, 309).endFill();
@@ -110,7 +106,7 @@ class Game {
       this.greenPressed = true;
       this.greenButton.graphics.clear()
         .beginFill("#00FF00").drawCircle(0, 0, 25, 309).endFill();
-    } else if (key === 73 || key === 74) {
+    } else if (key === 74) {
       this.strumming = true
     }
   }
@@ -121,7 +117,7 @@ class Game {
       this.redPressed = false;
       this.redButton.graphics.clear()
       this.redButton = drawButton(this.stage, "red");
-    } else if (key === 69) {
+    } else if (key === 68) {
       this.bluePressed = false;
       this.blueButton.graphics.clear()
       this.blueButton = drawButton(this.stage, "blue");
@@ -129,24 +125,30 @@ class Game {
       this.greenPressed = false;
       this.greenButton.graphics.clear()
       this.greenButton = drawButton(this.stage, "green");
-    } else if (key === 73 || key === 74) {
+    } else if (key === 74) {
       this.strumming = false
     }
   }
 
   handleHit (circle) {
     this.hits += 1;
-    circle.x += 200;
+    // createjs.Tween.get(circle).to({scaleX: 2, scaleY: 2}, 500);
     this.stage.removeChild(circle);
+  }
+
+  gameOver () {
+    setTimeout(() => {
+      stopMusic();
+      createjs.Tween.get(this.scoreboard).to({x: 100}, 1000, createjs.Ease.bounceOut);
+    }, 2000)
   }
 
   generateNotes () {
     const rhythm = getRhythm();
-
     this.deployNote(rhythm);
   }
 
-    deployNote (rhythm, note = 0) {
+  deployNote (rhythm, note = 0) {
       const duration = rhythm[note - 1] || rhythm[0];
       const delay = mapNoteToDuration[duration] * 1000
       const colors = ["red", "blue", "green"]
@@ -154,6 +156,10 @@ class Game {
       setTimeout(() => {
         const circleColor = colors[Math.floor(Math.random() * colors.length)];
         let circle = randomCircle(circleColor);
+        // let tween = createjs.Tween.get(circle)
+        //   .to({scaleX: 2, scaleY: 2}, 100)
+        //   .to({scaleX: .5, scaleY: .5}, 100);
+
         this.stage.addChild(circle);
 
         circle.addEventListener("tick", () => {
@@ -162,20 +168,28 @@ class Game {
             this.misses += 1;
             this.stage.removeChild(circle);
           } else if (circle.y > 840 && circle.y < 850) {
-              if (this.redPressed && this.strumming && circleColor === "red") {
-                this.handleHit(circle);
-              } else if (this.bluePressed && this.strumming && circleColor === "blue") {
-                this.handleHit(circle);
-              } else if (this.greenPressed && this.strumming && circleColor === "green") {
-                this.handleHit(circle);
-              }
+            if (this.redPressed && this.strumming && circleColor === "red") {
+              this.handleHit(circle);
+            } else if (this.bluePressed && this.strumming && circleColor === "blue") {
+              this.handleHit(circle);
+            } else if (this.greenPressed && this.strumming && circleColor === "green") {
+              this.handleHit(circle);
+            }
           }
         });
 
-        this.deployNote(rhythm, note + 1);
-
+        if (note + 1 === rhythm.length) {
+          this.gameOver();
+        } else {
+          this.deployNote(rhythm, note + 1);
+        }
       }, delay)
-    }
+  }
+
+  updateScore () {
+    const accuracy = this.accuracy().toString() + "%";
+    this.scoreboard.text = accuracy;
+  }
     // setInterval(() => {
     //   const circleColor = colors[Math.floor(Math.random() * colors.length)];
     //   let circle = randomCircle(circleColor);

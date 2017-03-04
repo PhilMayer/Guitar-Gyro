@@ -1,6 +1,6 @@
 import TinyMusic from 'tinymusic';
 
-const tempo = 170;
+const tempo = 200;
 let sequence1;
 let sequence2;
 
