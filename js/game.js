@@ -1,5 +1,6 @@
 import {randomCircle, drawButton} from './circle';
 import {playMusic, stopMusic, getRhythm, mapNoteToDuration} from './melody';
+const MusicPlayer = require('./music_player');
 
 document.addEventListener("DOMContentLoaded", () => {
   const playButton = document.getElementById("play")
@@ -11,47 +12,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
 class Game {
   constructor () {
-    this.stage = new createjs.Stage("demoCanvas");
+    this.stage = new createjs.Stage("gameCanvas");
     this.stage.keyboardEventsEnabled = true;
+    this.stage.enableMouseOver();
 
-    document.onkeydown = this.keyPressed.bind(this);
     document.onkeyup = this.keyReleased.bind(this);
+    document.onkeydown = this.keyPressed.bind(this);
 
     createjs.Ticker.addEventListener("tick", () => {
       this.stage.update();
     })
     createjs.Ticker.setFPS(60);
 
-    this.drawLetters();
 
-    this.misses = 0;
     this.hits = 0;
-
-    this.scoreboard = this.drawScoreboard();
-    // this.scoreboard.addEventListener("tick", () => {
-    //   this.updateScore()
-    // })
-    this.oldAccuracy = 0;
-
+    this.misses = 0;
+    this.drawLetters();
+    this.curAccuracy = 0;
     this.strumming = false;
-
     this.redPressed = false;
     this.bluePressed = false;
     this.greenPressed = false;
-
-
+    this.scoreboard = this.drawScoreboard();
     this.redButton = drawButton(this.stage, "red");
     this.blueButton = drawButton(this.stage, "blue");
     this.greenButton = drawButton(this.stage, "green");
 
-
-    this.run = this.run.bind(this);
-    this.run();
+    this.selectLevel();
   }
 
-  run () {
-    playMusic();
-    this.generateNotes();
+  run (tempo) {
+    const musicPlayer = new MusicPlayer(tempo);
+    musicPlayer.play();
+    const rhythm = getRhythm();
+    this.deployNote(rhythm);
   }
 
   accuracy () {
@@ -84,34 +78,9 @@ class Game {
     displayAccuracy.y = 250;
     this.stage.addChild(displayAccuracy);
 
-    // let displayLabel = new createjs.Text("accuracy", "20px Arial")
-    // displayLabel.x = 610;
-    // displayLabel.y = 287;
-    // this.stage.addChild(displayLabel);
-
     return displayAccuracy
   }
 
-
-  // keyPressed(e) {
-  //   const key = e.keyCode;
-  //
-  //   if (key === 83 && !this.bluePressed && !this.greenPressed) {
-  //     this.redPressed = true;
-  //     this.redButton.graphics.clear()
-  //       .beginFill("#FF0000").drawCircle(0, 0, 25, 309).endFill();
-  //   } else if (key === 68 && !this.redPressed && !this.greenPressed) {
-  //     this.bluePressed = true;
-  //     this.blueButton.graphics.clear()
-  //       .beginFill("#00FFFF").drawCircle(0, 0, 25, 309).endFill();
-  //   } else if (key === 70 && !this.bluePressed && !this.redPressed) {
-  //     this.greenPressed = true;
-  //     this.greenButton.graphics.clear()
-  //       .beginFill("#00FF00").drawCircle(0, 0, 25, 309).endFill();
-  //   } else if (key === 74) {
-  //     this.strumming = true
-  //   }
-  // }
   keyPressed(e) {
     const key = e.keyCode;
 
@@ -166,11 +135,6 @@ class Game {
     }, 2000)
   }
 
-  generateNotes () {
-    const rhythm = getRhythm();
-    this.deployNote(rhythm);
-  }
-
   handleHit (circle) {
     this.hits += 1;
     // createjs.Tween.get(circle).to({scaleX: 2, scaleY: 2}, 500);
@@ -186,7 +150,7 @@ class Game {
       setTimeout(() => {
         const circleColor = colors[Math.floor(Math.random() * colors.length)];
         let circle = randomCircle(circleColor);
-        let tween = createjs.Tween.get(circle);
+        // let tween = createjs.Tween.get(circle);
         //   .to({y: 1100}, 1000)
         //   .to({scaleX: .5, scaleY: .5}, 1000);
 
@@ -200,7 +164,6 @@ class Game {
             this.stage.removeChild(circle);
           } else if (circle.y > 840 && circle.y < 865) {
             if (this.redPressed && this.strumming && circleColor === "red") {
-              tween.to({scaleX: 2, scaleY: 2}, 1000);
               this.handleHit(circle);
             } else if (this.bluePressed && this.strumming && circleColor === "blue") {
               this.handleHit(circle);
@@ -219,36 +182,77 @@ class Game {
   }
 
   updateScore () {
-    const accuracy = this.accuracy().toString() + "%";
-    this.scoreboard.text = accuracy;
-    if (accuracy >= this.oldAccuracy) {
+    const updatedAccuracy = this.accuracy().toString() + "%";
+    this.scoreboard.text = updatedAccuracy;
+
+    if (updatedAccuracy >= this.curAccuracy) {
       this.scoreboard.color = "#00FF00"
     } else {
       this.scoreboard.color = "#FF0000"
     }
 
-    this.oldAccuracy = accuracy;
+    this.curAccuracy = updatedAccuracy;
   }
-    // setInterval(() => {
-    //   const circleColor = colors[Math.floor(Math.random() * colors.length)];
-    //   let circle = randomCircle(circleColor);
-    //   this.stage.addChild(circle);
-    //
-    //   circle.addEventListener("tick", () => {
-    //     circle.y += 8;
-    //     if (circle.y === 1100) {
-    //       this.misses += 1;
-    //       this.stage.removeChild(circle);
-    //     } else if (circle.y > 830) {
-    //         if (this.redPressed && this.strumming && circleColor === "red") {
-    //           this.handleHit(circle);
-    //         } else if (this.bluePressed && this.strumming && circleColor === "blue") {
-    //           this.handleHit(circle);
-    //         } else if (this.greenPressed && this.strumming && circleColor === "green") {
-    //           this.handleHit(circle);
-    //         }
-    //     }
-    //   });
-    // }, 500)
 
+  selectLevel () {
+    let gameTempo;
+    let tempo1
+    let tempo2
+    let tempo3
+    let tempo4
+
+    tempo1 = new createjs.Text("Allegretto (easy)", "30px Arial", "#00FF00");
+    tempo1.x = 150;
+    tempo1.y = 1200;
+    tempo1.cursor = "pointer";
+    tempo1.addEventListener("click", () => {
+      gameTempo = 110;
+      this.stage.removeChild(tempo1, tempo2, tempo3, tempo4)
+      this.run(gameTempo);
+    })
+    createjs.Tween.get(tempo1).to({y: 200}, 400, createjs.Ease.bounceOut)
+    this.stage.addChild(tempo1)
+
+    setTimeout(() => {
+      tempo2 = new createjs.Text("Vivace (medium)", "30px Arial", "#00FFFF");
+      tempo2.x = 150;
+      tempo2.y = 1200;
+      tempo2.cursor = "pointer";
+      tempo2.addEventListener("click", () => {
+        gameTempo = 130;
+        this.stage.removeChild(tempo1, tempo2, tempo3, tempo4)
+        this.run(gameTempo);
+      })
+      createjs.Tween.get(tempo2).to({y: 240}, 400, createjs.Ease.bounceOut)
+      this.stage.addChild(tempo2)
+
+      setTimeout(() => {
+        tempo3 = new createjs.Text("Presto (hard)", "30px Arial", "#FF0000");
+        tempo3.x = 150;
+        tempo3.y = 1200;
+        tempo3.cursor = "pointer";
+        tempo3.addEventListener("click", () => {
+          gameTempo = 170;
+          this.stage.removeChild(tempo1, tempo2, tempo3, tempo4)
+          this.run(gameTempo);
+        })
+        createjs.Tween.get(tempo3).to({y: 280}, 400, createjs.Ease.bounceOut)
+        this.stage.addChild(tempo3)
+
+        setTimeout(() => {
+          tempo4 = new createjs.Text("Prestissimo (there's just no way)", "30px Arial", "#DC143C");
+          tempo4.x = 150;
+          tempo4.y = 1200;
+          tempo4.cursor = "pointer";
+          tempo4.addEventListener("click", () => {
+            gameTempo = 185;
+            this.stage.removeChild(tempo1, tempo2, tempo3, tempo4)
+            this.run(gameTempo);
+          })
+          createjs.Tween.get(tempo4).to({y: 320}, 400, createjs.Ease.bounceOut)
+          this.stage.addChild(tempo4)
+        }, 500)
+      }, 500)
+    }, 500)
+  }
 }

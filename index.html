@@ -7,21 +7,17 @@
     <script src="https://code.createjs.com/tweenjs-0.6.2.min.js"></script>
     <link rel="stylesheet" type="text/css" href="./stylesheets/play_button.css">
     <script src="./bundle.js" type="text/javascript"></script>
-
-    <script>
-    function playTrack() {
-      document.getElementById("player").play();
-    }
-    </script>
   </head>
 
-  <body style="display:flex">
-    <canvas id="demoCanvas" width="700" height="900"></canvas>
+  <body>
+    <canvas id="gameCanvas" width="700" height="900"></canvas>
 
-    <audio id="player">
-      <source src="./audio/SummerKnights.ogg" type="audio/ogg"/>
-      <source src="./audio/SummerKnights.mp3" type="audio/mpeg"/>
-    </audio>
+    <!-- <div class="levels">
+      <h2 id="tempo1">Allegretto</h2>
+      <h2>Vivace</h2>
+      <h2>Presto</h2>
+      <h2>Prestissimo</h2>
+    </div> -->
 
     <div class="play-button-holder">
       <div class="play-button">
@@ -34,5 +30,4 @@
     </div>
 
   </body>
-
 </html>

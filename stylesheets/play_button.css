@@ -1,6 +1,19 @@
+.levels {
+  float:left;
+}
+
+h2 {
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
+
 .play-button-holder {
   position: absolute;
-  left: 485px;
+  left: 5px;
+  top: 240px;
   height: 100px;
 }
 
