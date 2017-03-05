@@ -1,4 +1,4 @@
-import {randomCircle, drawButton} from './circle.js';
+import {randomCircle, drawButton} from './circle';
 import {playMusic, stopMusic, getRhythm, mapNoteToDuration} from './melody';
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -65,6 +65,7 @@ class Game {
   drawLetters () {
     const letters = ["S", "D", "F"]
     let xCoord = 92;
+
     letters.forEach(letter => {
       let buttonLetter = new createjs.Text(letter, "25px Arial");
       buttonLetter.x = xCoord;
@@ -91,21 +92,46 @@ class Game {
   }
 
 
+  // keyPressed(e) {
+  //   const key = e.keyCode;
+  //
+  //   if (key === 83 && !this.bluePressed && !this.greenPressed) {
+  //     this.redPressed = true;
+  //     this.redButton.graphics.clear()
+  //       .beginFill("#FF0000").drawCircle(0, 0, 25, 309).endFill();
+  //   } else if (key === 68 && !this.redPressed && !this.greenPressed) {
+  //     this.bluePressed = true;
+  //     this.blueButton.graphics.clear()
+  //       .beginFill("#00FFFF").drawCircle(0, 0, 25, 309).endFill();
+  //   } else if (key === 70 && !this.bluePressed && !this.redPressed) {
+  //     this.greenPressed = true;
+  //     this.greenButton.graphics.clear()
+  //       .beginFill("#00FF00").drawCircle(0, 0, 25, 309).endFill();
+  //   } else if (key === 74) {
+  //     this.strumming = true
+  //   }
+  // }
   keyPressed(e) {
     const key = e.keyCode;
 
-    if (key === 83 && !this.bluePressed && !this.greenPressed) {
+    if (key === 83) {
       this.redPressed = true;
       this.redButton.graphics.clear()
         .beginFill("#FF0000").drawCircle(0, 0, 25, 309).endFill();
-    } else if (key === 68 && !this.redPressed && !this.greenPressed) {
+      this.blueButton.graphics.clear()
+      this.greenButton.graphics.clear()
+    } else if (key === 68) {
       this.bluePressed = true;
       this.blueButton.graphics.clear()
         .beginFill("#00FFFF").drawCircle(0, 0, 25, 309).endFill();
-    } else if (key === 70 && !this.bluePressed && !this.redPressed) {
+      this.greenButton.graphics.clear()
+      this.redButton.graphics.clear()
+    } else if (key === 70) {
       this.greenPressed = true;
       this.greenButton.graphics.clear()
-        .beginFill("#00FF00").drawCircle(0, 0, 25, 309).endFill();
+      .beginFill("#00FF00").drawCircle(0, 0, 25, 309).endFill();
+      this.redButton.graphics.clear()
+      this.blueButton.graphics.clear()
     } else if (key === 74) {
       this.strumming = true
     }
@@ -125,21 +151,17 @@ class Game {
       this.greenPressed = false;
       this.greenButton.graphics.clear()
       this.greenButton = drawButton(this.stage, "green");
-    } else if (key === 74) {
+    } else
+    if (key === 74) {
       this.strumming = false
     }
-  }
-
-  handleHit (circle) {
-    this.hits += 1;
-    // createjs.Tween.get(circle).to({scaleX: 2, scaleY: 2}, 500);
-    this.stage.removeChild(circle);
   }
 
   gameOver () {
     setTimeout(() => {
       stopMusic();
-      createjs.Tween.get(this.scoreboard).to({x: 100}, 1000, createjs.Ease.bounceOut);
+      createjs.Tween.get(this.scoreboard).to({x: 80, rotation: -360},
+        1000, createjs.Ease.bounceOut);
     }, 2000)
   }
 
@@ -148,9 +170,15 @@ class Game {
     this.deployNote(rhythm);
   }
 
+  handleHit (circle) {
+    this.hits += 1;
+    // createjs.Tween.get(circle).to({scaleX: 2, scaleY: 2}, 500);
+    this.stage.removeChild(circle);
+  }
+
   deployNote (rhythm, note = 0) {
-      const duration = rhythm[note - 1] || rhythm[0];
-      const delay = mapNoteToDuration[duration] * 1000
+      const typeOfNote = rhythm[note - 1] || rhythm[0];
+      const delay = mapNoteToDuration[typeOfNote] * 1000
       const colors = ["red", "blue", "green"]
 
       setTimeout(() => {
@@ -167,7 +195,7 @@ class Game {
           if (circle.y === 1100) {
             this.misses += 1;
             this.stage.removeChild(circle);
-          } else if (circle.y > 840 && circle.y < 850) {
+          } else if (circle.y > 835 && circle.y < 860) {
             if (this.redPressed && this.strumming && circleColor === "red") {
               this.handleHit(circle);
             } else if (this.bluePressed && this.strumming && circleColor === "blue") {
