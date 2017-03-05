@@ -1,7 +1,9 @@
 import TinyMusic from 'tinymusic';
+import {bass, melody} from './melody.js';
 
-module.exports = class MusicPlayer {
+export default class MusicPlayer {
   constructor(tempo) {
+    debugger
     this.tempo = tempo;
     this.sequence1;
     this.sequence2;
@@ -10,81 +12,47 @@ module.exports = class MusicPlayer {
   mapNoteToDuration (noteLength) {
     switch(noteLength) {
       case "e":
-        return ((60 / tempo) / 2)
+        return ((60 / this.tempo) / 2)
       case "q":
-        return (60 / tempo)
+        return (60 / this.tempo)
       case "qe":
-        return ((60 / tempo) * 1.5)
+        return ((60 / this.tempo) * 1.5)
       case "h":
-        return ((60 / tempo) * 2)
+        return ((60 / this.tempo) * 2)
       case "w":
-        return ((60 / tempo) * 4)
+        return ((60 / this.tempo) * 4)
     }
   }
 
-
   play () {
-    let ac = new AudioContext(),
-    when = ac.currentTime,
+    const  ac = new AudioContext();
+    const when = ac.currentTime;
 
-    bass = [
-      'C2  w',
+    this.sequence1 = new TinyMusic.Sequence( ac, this.tempo, melody );
+    this.sequence2 = new TinyMusic.Sequence( ac, this.tempo, bass );
 
-      'G2  w',
+    this.sequence1.staccato = 0.1;
 
-      'E2  w',
+    this.sequence1.gain.gain.value = 1.0;
+    this.sequence2.gain.gain.value = 0.65;
 
-      'G2  w',
+    this.sequence1.mid.frequency.value = 800;
+    this.sequence1.mid.gain.value = 3;
 
-      'C2  w',
+    this.sequence2.mid.gain.value = 3;
+    this.sequence2.bass.gain.value = 6;
+    this.sequence2.bass.frequency.value = 80;
+    this.sequence2.mid.gain.value = -6;
+    this.sequence2.mid.frequency.value = 500;
+    this.sequence2.treble.gain.value = -2;
+    this.sequence2.treble.frequency.value = 1400;
 
-      'G2  w',
+    this.sequence1.play( when + ( 60 / this.tempo ) * (this.tempo / 30));
+    this.sequence2.play( when + ( 60 / this.tempo ) * (this.tempo / 30));
+  }
 
-      'E2  w',
-
-      'F2  h',
-      'E2  h',
-
-      'G2  w',
-
-      'G2  w',
-
-      'G2  h',
-      'Ab2 h',
-
-      'A2  h',
-      'G2  h',
-
-      'C2  w',
-
-      'G2  w',
-
-      'E2  w',
-
-      'G2  h',
-      'E2  h'
-    ];
-
-    sequence1 = new TinyMusic.Sequence( ac, tempo, melody );
-    sequence2 = new TinyMusic.Sequence( ac, tempo, bass );
-
-    sequence1.staccato = 0.1;
-
-    sequence1.gain.gain.value = 1.0;
-    sequence2.gain.gain.value = 0.65;
-
-    sequence1.mid.frequency.value = 800;
-    sequence1.mid.gain.value = 3;
-
-    sequence2.mid.gain.value = 3;
-    sequence2.bass.gain.value = 6;
-    sequence2.bass.frequency.value = 80;
-    sequence2.mid.gain.value = -6;
-    sequence2.mid.frequency.value = 500;
-    sequence2.treble.gain.value = -2;
-    sequence2.treble.frequency.value = 1400;
-
-    sequence1.play( when + ( 60 / tempo ) * (tempo / 30));
-    sequence2.play( when + ( 60 / tempo ) * (tempo / 30));
+  stopMusic () {
+    if (this.sequence1) this.sequence1.stop();
+    if (this.sequence2) this.sequence2.stop();
   }
 }

@@ -1,11 +1,11 @@
 import {randomCircle, drawButton} from './circle';
-import {playMusic, stopMusic, getRhythm, mapNoteToDuration} from './melody';
-const MusicPlayer = require('./music_player');
+import {getRhythm, mapNoteToDuration} from './melody';
+import MusicPlayer from './music_player'
 
 document.addEventListener("DOMContentLoaded", () => {
   const playButton = document.getElementById("play")
   playButton.addEventListener("click", () => {
-    stopMusic();
+    // stopMusic();
     new Game();
   })
 });
@@ -33,17 +33,18 @@ class Game {
     this.redPressed = false;
     this.bluePressed = false;
     this.greenPressed = false;
-    this.scoreboard = this.drawScoreboard();
     this.redButton = drawButton(this.stage, "red");
     this.blueButton = drawButton(this.stage, "blue");
     this.greenButton = drawButton(this.stage, "green");
 
     this.selectLevel();
+    this.tempo = 120;
   }
 
-  run (tempo) {
-    const musicPlayer = new MusicPlayer(tempo);
-    musicPlayer.play();
+  run () {
+    this.scoreboard = this.drawScoreboard();
+    this.musicPlayer = new MusicPlayer(this.tempo);
+    this.musicPlayer.play();
     const rhythm = getRhythm();
     this.deployNote(rhythm);
   }
@@ -55,6 +56,41 @@ class Game {
     } else {
       return Math.round((this.hits / totalNotes) * 100)
     }
+  }
+
+  deployNote (rhythm, note = 0) {
+    const typeOfNote = rhythm[note - 1] || rhythm[0];
+    const delay = this.musicPlayer.mapNoteToDuration(typeOfNote) * 1000
+    const colors = ["red", "blue", "green"]
+
+    setTimeout(() => {
+      const circleColor = colors[Math.floor(Math.random() * colors.length)];
+      let circle = randomCircle(circleColor);
+      this.stage.addChild(circle);
+
+      circle.addEventListener("tick", () => {
+        circle.y += 8;
+        if (circle.y === 1100) {
+          this.misses += 1;
+          this.updateScore();
+          this.stage.removeChild(circle);
+        } else if (circle.y > 840 && circle.y < 865) {
+          if (this.redPressed && this.strumming && circleColor === "red") {
+            this.handleHit(circle);
+          } else if (this.bluePressed && this.strumming && circleColor === "blue") {
+            this.handleHit(circle);
+          } else if (this.greenPressed && this.strumming && circleColor === "green") {
+            this.handleHit(circle);
+          }
+        }
+      });
+
+      if (note + 1 === rhythm.length) {
+        this.gameOver();
+      } else {
+        this.deployNote(rhythm, note + 1);
+      }
+    }, delay)
   }
 
   drawLetters () {
@@ -79,6 +115,14 @@ class Game {
     this.stage.addChild(displayAccuracy);
 
     return displayAccuracy
+  }
+
+  gameOver () {
+    setTimeout(() => {
+      this.musicPlayer.stopMusic();
+      createjs.Tween.get(this.scoreboard).to({x: 80, rotation: -360},
+        1000, createjs.Ease.bounceOut);
+      }, 2000)
   }
 
   keyPressed(e) {
@@ -127,13 +171,6 @@ class Game {
     }
   }
 
-  gameOver () {
-    setTimeout(() => {
-      stopMusic();
-      createjs.Tween.get(this.scoreboard).to({x: 80, rotation: -360},
-        1000, createjs.Ease.bounceOut);
-    }, 2000)
-  }
 
   handleHit (circle) {
     this.hits += 1;
@@ -142,44 +179,6 @@ class Game {
     this.updateScore();
   }
 
-  deployNote (rhythm, note = 0) {
-      const typeOfNote = rhythm[note - 1] || rhythm[0];
-      const delay = mapNoteToDuration[typeOfNote] * 1000
-      const colors = ["red", "blue", "green"]
-
-      setTimeout(() => {
-        const circleColor = colors[Math.floor(Math.random() * colors.length)];
-        let circle = randomCircle(circleColor);
-        // let tween = createjs.Tween.get(circle);
-        //   .to({y: 1100}, 1000)
-        //   .to({scaleX: .5, scaleY: .5}, 1000);
-
-        this.stage.addChild(circle);
-
-        circle.addEventListener("tick", () => {
-          circle.y += 8;
-          if (circle.y === 1100) {
-            this.misses += 1;
-            this.updateScore();
-            this.stage.removeChild(circle);
-          } else if (circle.y > 840 && circle.y < 865) {
-            if (this.redPressed && this.strumming && circleColor === "red") {
-              this.handleHit(circle);
-            } else if (this.bluePressed && this.strumming && circleColor === "blue") {
-              this.handleHit(circle);
-            } else if (this.greenPressed && this.strumming && circleColor === "green") {
-              this.handleHit(circle);
-            }
-          }
-        });
-
-        if (note + 1 === rhythm.length) {
-          this.gameOver();
-        } else {
-          this.deployNote(rhythm, note + 1);
-        }
-      }, delay)
-  }
 
   updateScore () {
     const updatedAccuracy = this.accuracy().toString() + "%";
@@ -195,7 +194,6 @@ class Game {
   }
 
   selectLevel () {
-    let gameTempo;
     let tempo1
     let tempo2
     let tempo3
@@ -206,9 +204,9 @@ class Game {
     tempo1.y = 1200;
     tempo1.cursor = "pointer";
     tempo1.addEventListener("click", () => {
-      gameTempo = 110;
+      this.tempo = 110;
       this.stage.removeChild(tempo1, tempo2, tempo3, tempo4)
-      this.run(gameTempo);
+      this.run();
     })
     createjs.Tween.get(tempo1).to({y: 200}, 400, createjs.Ease.bounceOut)
     this.stage.addChild(tempo1)
@@ -219,9 +217,9 @@ class Game {
       tempo2.y = 1200;
       tempo2.cursor = "pointer";
       tempo2.addEventListener("click", () => {
-        gameTempo = 130;
+        this.tempo = 130;
         this.stage.removeChild(tempo1, tempo2, tempo3, tempo4)
-        this.run(gameTempo);
+        this.run();
       })
       createjs.Tween.get(tempo2).to({y: 240}, 400, createjs.Ease.bounceOut)
       this.stage.addChild(tempo2)
@@ -232,9 +230,9 @@ class Game {
         tempo3.y = 1200;
         tempo3.cursor = "pointer";
         tempo3.addEventListener("click", () => {
-          gameTempo = 170;
+          this.tempo = 170;
           this.stage.removeChild(tempo1, tempo2, tempo3, tempo4)
-          this.run(gameTempo);
+          this.run();
         })
         createjs.Tween.get(tempo3).to({y: 280}, 400, createjs.Ease.bounceOut)
         this.stage.addChild(tempo3)
@@ -245,9 +243,9 @@ class Game {
           tempo4.y = 1200;
           tempo4.cursor = "pointer";
           tempo4.addEventListener("click", () => {
-            gameTempo = 185;
+            this.tempo = 185;
             this.stage.removeChild(tempo1, tempo2, tempo3, tempo4)
-            this.run(gameTempo);
+            this.run();
           })
           createjs.Tween.get(tempo4).to({y: 320}, 400, createjs.Ease.bounceOut)
           this.stage.addChild(tempo4)
