@@ -28,9 +28,10 @@ class Game {
     this.hits = 0;
 
     this.scoreboard = this.drawScoreboard();
-    this.scoreboard.addEventListener("tick", () => {
-      this.updateScore()
-    })
+    // this.scoreboard.addEventListener("tick", () => {
+    //   this.updateScore()
+    // })
+    this.oldAccuracy = 0;
 
     this.strumming = false;
 
@@ -174,6 +175,7 @@ class Game {
     this.hits += 1;
     // createjs.Tween.get(circle).to({scaleX: 2, scaleY: 2}, 500);
     this.stage.removeChild(circle);
+    this.updateScore();
   }
 
   deployNote (rhythm, note = 0) {
@@ -184,9 +186,9 @@ class Game {
       setTimeout(() => {
         const circleColor = colors[Math.floor(Math.random() * colors.length)];
         let circle = randomCircle(circleColor);
-        // let tween = createjs.Tween.get(circle)
-        //   .to({scaleX: 2, scaleY: 2}, 100)
-        //   .to({scaleX: .5, scaleY: .5}, 100);
+        let tween = createjs.Tween.get(circle);
+        //   .to({y: 1100}, 1000)
+        //   .to({scaleX: .5, scaleY: .5}, 1000);
 
         this.stage.addChild(circle);
 
@@ -194,9 +196,11 @@ class Game {
           circle.y += 8;
           if (circle.y === 1100) {
             this.misses += 1;
+            this.updateScore();
             this.stage.removeChild(circle);
-          } else if (circle.y > 835 && circle.y < 860) {
+          } else if (circle.y > 840 && circle.y < 865) {
             if (this.redPressed && this.strumming && circleColor === "red") {
+              tween.to({scaleX: 2, scaleY: 2}, 1000);
               this.handleHit(circle);
             } else if (this.bluePressed && this.strumming && circleColor === "blue") {
               this.handleHit(circle);
@@ -217,6 +221,13 @@ class Game {
   updateScore () {
     const accuracy = this.accuracy().toString() + "%";
     this.scoreboard.text = accuracy;
+    if (accuracy >= this.oldAccuracy) {
+      this.scoreboard.color = "#00FF00"
+    } else {
+      this.scoreboard.color = "#FF0000"
+    }
+
+    this.oldAccuracy = accuracy;
   }
     // setInterval(() => {
     //   const circleColor = colors[Math.floor(Math.random() * colors.length)];
