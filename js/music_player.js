@@ -3,7 +3,6 @@ import {bass, melody} from './melody.js';
 
 export default class MusicPlayer {
   constructor(tempo) {
-    debugger
     this.tempo = tempo;
     this.sequence1;
     this.sequence2;

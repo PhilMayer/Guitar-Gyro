@@ -2,8 +2,11 @@
   float:left;
 }
 
-h2 {
-  cursor: pointer;
+h1 {
+  position: absolute;
+  top: 20px;
+  font-family: 'Reenie Beanie', cursive;
+  font-size: 40px;
 }
 
 .hidden {
@@ -13,26 +16,26 @@ h2 {
 .play-button-holder {
   position: absolute;
   left: 5px;
-  top: 220px;
+  top: 108px;
   height: 100px;
 }
 
 .play-button {
   height: 100px;
   width: 100px;
-  border: 20px solid black;
+  border: 5px solid black;
   border-radius: 50%;
 }
 
 .play-button:hover {
-  border: 20px solid #FF0000
+  border: 5px solid #FF0000
 }
 
 .triangle {
   font-size: 50px;
   position: absolute;
-  bottom: -3px;
-  left: 52px;
+  bottom: 10px;
+  left: 39px;
   cursor: pointer;
 }
 
