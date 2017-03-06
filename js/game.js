@@ -109,7 +109,7 @@ class Game {
   drawScoreboard () {
     const accuracy = this.accuracy().toString() + "%";
 
-    let displayAccuracy = new createjs.Text(accuracy, "60px Reenie Beanie");
+    let displayAccuracy = new createjs.Text(accuracy, "90px Reenie Beanie");
     displayAccuracy.x = 400;
     displayAccuracy.y = 250;
     this.stage.addChild(displayAccuracy);
@@ -124,18 +124,32 @@ class Game {
         1000, createjs.Ease.bounceOut);
 
       setTimeout(() => {
-        const message = new createjs.Text("Beethoven would be proud-ish", "20px Reenie Beanie");
+        const message = new createjs.Text("You're basically Beethoven.", "30px Reenie Beanie");
         message.x = 75;
-        message.y = 315;
+        message.y = 335;
         this.stage.addChild(message);
 
         setTimeout(() => {
           const githubLink = new createjs.Text("A game by Phil Mayer => Github", "40px Reenie Beanie")
           githubLink.addEventListener("click", () => window.open("https://github.com/PhilMayer/JSHero"))
           githubLink.cursor = "pointer";
-          message.x = 75;
-          message.y = 315;
+          githubLink.x = 75;
+          githubLink.y = 20;
           this.stage.addChild(githubLink);
+
+          setTimeout(() => {
+            const playAgain = new createjs.Text("Play again!!", "80px Reenie Beanie", "#00FF00")
+            playAgain.addEventListener("click", () => {
+              this.stage.removeChild(playAgain, githubLink, message, this.scoreboard)
+              this.hits = 0;
+              this.misses = 0;
+              this.run();
+            })
+            playAgain.cursor = "pointer";
+            playAgain.x = 75;
+            playAgain.y = 375;
+            this.stage.addChild(playAgain);
+          }, 200)
         }, 1000)
       }, 1000)
     }, 2000)
@@ -213,7 +227,7 @@ class Game {
     document.getElementById("play-button").className = "hidden";
     document.getElementById("header").className = "hidden";
 
-    const count3 = new createjs.Text("3", "70px Reenie Beanie", "#00FF00");
+    const count3 = new createjs.Text("3", "100px Reenie Beanie", "#00FF00");
     count3.x = 180;
     count3.y = 300;
     createjs.Tween.get(count3).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
@@ -221,7 +235,7 @@ class Game {
 
     setTimeout(() => {
       this.stage.removeChild(count3);
-      const count2 = new createjs.Text("2", "70px Reenie Beanie", "#00FFFF");
+      const count2 = new createjs.Text("2", "100px Reenie Beanie", "#00FFFF");
       count2.x = 180;
       count2.y = 300;
       createjs.Tween.get(count2).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
@@ -229,7 +243,7 @@ class Game {
 
       setTimeout(() => {
         this.stage.removeChild(count2);
-        const count1 = new createjs.Text("1", "70px Reenie Beanie", "#FF0000");
+        const count1 = new createjs.Text("1", "100px Reenie Beanie", "#FF0000");
         count1.x = 180;
         count1.y = 300;
         createjs.Tween.get(count1).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
@@ -244,19 +258,19 @@ class Game {
   }
 
   directions () {
-    const direction1 = new createjs.Text("=> S/D/F to hold down notes.", "60px Reenie Beanie", "#00FF00");
+    const direction1 = new createjs.Text("=> Press S/D/F to hold down notes.", "60px Reenie Beanie", "#00FF00");
     direction1.x = 150;
     direction1.y = -60;
 
-    createjs.Tween.get(direction1).to({y: 200}, 400, createjs.Ease.bounceOut)
+    createjs.Tween.get(direction1).to({y: 180}, 400, createjs.Ease.bounceOut)
     this.stage.addChild(direction1)
 
     setTimeout(() => {
-      const direction2 = new createjs.Text("=> J to strum.", "60px Reenie Beanie", "#00FF00");
+      const direction2 = new createjs.Text("=> Tap J to strum.", "60px Reenie Beanie", "#00FF00");
       direction2.x = 150;
       direction2.y = -60;
 
-      createjs.Tween.get(direction2).to({y: 120}, 400, createjs.Ease.bounceOut)
+      createjs.Tween.get(direction2).to({y: 100}, 400, createjs.Ease.bounceOut)
       this.stage.addChild(direction2)
 
       setTimeout(() => {

@@ -30,7 +30,7 @@ export default class MusicPlayer {
     this.sequence1 = new TinyMusic.Sequence( ac, this.tempo, melody );
     this.sequence2 = new TinyMusic.Sequence( ac, this.tempo, bass );
 
-    this.sequence1.staccato = 0.1;
+    this.sequence1.staccato = 0.2;
 
     this.sequence1.gain.gain.value = 1.0;
     this.sequence2.gain.gain.value = 0.65;
