@@ -24,12 +24,12 @@ export default class MusicPlayer {
   }
 
   play () {
-    const  ac = new AudioContext();
+    const ac = new AudioContext();
     const when = ac.currentTime;
 
     this.sequence1 = new TinyMusic.Sequence( ac, this.tempo, melody );
     this.sequence2 = new TinyMusic.Sequence( ac, this.tempo, bass );
-
+    this.sequence1.smoothing = 0.1;
     this.sequence1.staccato = 0.2;
 
     this.sequence1.gain.gain.value = 1.0;

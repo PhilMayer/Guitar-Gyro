@@ -1,11 +1,13 @@
 import {randomCircle, drawButton} from './circle';
 import {getRhythm, mapNoteToDuration} from './melody';
 import MusicPlayer from './music_player'
+import anime from 'animejs';
 
 document.addEventListener("DOMContentLoaded", () => {
   const playButton = document.getElementById("play")
   playButton.addEventListener("click", () => {
     // stopMusic();
+    document.getElementById("play-button").className = "hidden";
     new Game();
   })
 });
@@ -201,14 +203,18 @@ class Game {
     }
   }
 
-
   handleHit (circle) {
     this.hits += 1;
     // createjs.Tween.get(circle).to({scaleX: 2, scaleY: 2}, 500);
+    //
+    // anime({
+    // targets: circle,
+    // translateX: 250
+    // });
+
     this.stage.removeChild(circle);
     this.updateScore();
   }
-
 
   updateScore () {
     const updatedAccuracy = this.accuracy().toString() + "%";
@@ -224,7 +230,7 @@ class Game {
   }
 
   countdown () {
-    document.getElementById("play-button").className = "hidden";
+    // document.getElementById("play-button").className = "hidden";
     document.getElementById("header").className = "hidden";
 
     const count3 = new createjs.Text("3", "100px Reenie Beanie", "#00FF00");
@@ -286,8 +292,8 @@ class Game {
     let tempo3
     let tempo4
 
-    tempo1 = new createjs.Text("Allegretto (easy)", "30px Reenie Beanie", "#00FF00");
-    tempo1.x = 150;
+    tempo1 = new createjs.Text("=>Allegretto (easy)", "30px Reenie Beanie", "#00FF00");
+    tempo1.x = 100;
     tempo1.y = 1200;
     tempo1.cursor = "pointer";
     tempo1.addEventListener("click", () => {
@@ -295,12 +301,12 @@ class Game {
       this.stage.removeChild(tempo1, tempo2, tempo3, tempo4)
       this.directions();
     })
-    createjs.Tween.get(tempo1).to({y: 80}, 400, createjs.Ease.bounceOut)
+    createjs.Tween.get(tempo1).to({y: 300}, 400, createjs.Ease.bounceOut)
     this.stage.addChild(tempo1)
 
     setTimeout(() => {
-      tempo2 = new createjs.Text("Vivace (medium)", "30px Reenie Beanie", "#00FFFF");
-      tempo2.x = 150;
+      tempo2 = new createjs.Text("=>Vivace (medium)", "30px Reenie Beanie", "#00FFFF");
+      tempo2.x = 100;
       tempo2.y = 1200;
       tempo2.cursor = "pointer";
       tempo2.addEventListener("click", () => {
@@ -308,12 +314,12 @@ class Game {
         this.stage.removeChild(tempo1, tempo2, tempo3, tempo4)
         this.directions();
       })
-      createjs.Tween.get(tempo2).to({y: 120}, 400, createjs.Ease.bounceOut)
+      createjs.Tween.get(tempo2).to({y: 200}, 400, createjs.Ease.bounceOut)
       this.stage.addChild(tempo2)
 
       setTimeout(() => {
-        tempo3 = new createjs.Text("Presto (hard)", "30px Reenie Beanie", "#FF0000");
-        tempo3.x = 150;
+        tempo3 = new createjs.Text("=>Presto (hard)", "30px Reenie Beanie", "#FF0000");
+        tempo3.x = 100;
         tempo3.y = 1200;
         tempo3.cursor = "pointer";
         tempo3.addEventListener("click", () => {
@@ -321,12 +327,12 @@ class Game {
           this.stage.removeChild(tempo1, tempo2, tempo3, tempo4)
           this.directions();
         })
-        createjs.Tween.get(tempo3).to({y: 160}, 400, createjs.Ease.bounceOut)
+        createjs.Tween.get(tempo3).to({y: 380}, 400, createjs.Ease.bounceOut)
         this.stage.addChild(tempo3)
 
         setTimeout(() => {
-          tempo4 = new createjs.Text("Prestissimo (there's just no way)", "30px Reenie Beanie", "#DC143C");
-          tempo4.x = 150;
+          tempo4 = new createjs.Text("=>Prestissimo (there's just no way)", "30px Reenie Beanie", "#DC143C");
+          tempo4.x = 100;
           tempo4.y = 1200;
           tempo4.cursor = "pointer";
           tempo4.addEventListener("click", () => {
@@ -334,7 +340,7 @@ class Game {
             this.stage.removeChild(tempo1, tempo2, tempo3, tempo4)
             this.directions();
           })
-          createjs.Tween.get(tempo4).to({y: 200}, 400, createjs.Ease.bounceOut)
+          createjs.Tween.get(tempo4).to({y: 420}, 400, createjs.Ease.bounceOut)
           this.stage.addChild(tempo4)
         }, 500)
       }, 500)
