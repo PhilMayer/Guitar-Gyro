@@ -1,41 +1,49 @@
+#gameCanvas {
+    position: absolute;
+   top:0;
+   bottom: 0;
+   left: 28%;
+   right: 0;
+   margin: 0 auto;
+}
+
 .levels {
   float:left;
 }
 
 h1 {
-  position: absolute;
-  top: 20px;
   font-family: 'Reenie Beanie', cursive;
-  font-size: 40px;
+  font-size: 100px;
+  text-align: center;
 }
 
 .hidden {
   display: none;
 }
 
-.play-button-holder {
-  position: absolute;
-  left: 22px;
-  top: 108px;
+#play-button {
   height: 100px;
+  margin: auto;
 }
 
-.play-button {
-  height: 100px;
-  width: 100px;
+.play-circle {
+  position: relative;
+  height: 150px;
+  width: 150px;
   border: 5px solid black;
   border-radius: 50%;
+  margin: auto;
 }
 
-.play-button:hover {
+.play-circle:hover {
   border: 5px solid #FF0000
 }
 
 .triangle {
-  font-size: 50px;
+  font-size: 100px;
   position: absolute;
-  bottom: 10px;
-  left: 39px;
+  bottom: 8px;
+  left: 41px;
   cursor: pointer;
 }
 

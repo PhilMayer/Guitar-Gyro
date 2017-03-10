@@ -127,11 +127,3 @@ export const getRhythm = () => {
 
   return rhythm;
 }
-
-  // export const mapNoteToDuration = {
-  //   "e": ((60 / tempo) / 2),
-  //   "q": (60 / tempo),
-  //   "qe": ((60 / tempo) * 1.5),
-  //   "h": ((60 / tempo) * 2),
-  //   "w": ((60 / tempo) * 4)
-  // }
