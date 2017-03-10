@@ -28,12 +28,12 @@ export const melody = [
   'D3  h'
 ```
 
-The note names are the first term in the array item (i.e. E3, D3), while the term after the space is the note duration (i.e. quarter, quarter-eighth, eighth, half or whole). To get the rhythm of the tune, a simple regular expression is employed:
+The note names are the first term in the array item (i.e. E3, D3), while the term after the space is the note duration (i.e. quarter, quarter-eighth, eighth, half or whole). To get the rhythm of the tune, a regular expression is employed:
 
 ```javascript
 const regExp = /\d\s*(.*)/
 ```
-From here, we simply call `MusicPlayer`'s `mapNoteToDuration`, which turns our note value into a duration in seconds, based on the chosen tempo.
+From here, we call `MusicPlayer`'s `mapNoteToDuration`, which turns our note value into a duration in seconds, based on the chosen tempo.
 
 ```javascript
 mapNoteToDuration (noteLength) {
@@ -61,4 +61,4 @@ The `Game` class function `deployNote` is what actually sends our notes cascadin
 Finally, each note recursively calls `deployNote` on the next note until we reach the end of the tune.
 
 ##Make your own Guitar Gyro!
-Guitar Gyro will work with any tune, at any tempo. So, to play your own song, simply clone this repo, plug in a new melody (and optionally bass) in 'melody.js', and have at it.
+Guitar Gyro will work with any tune, at any tempo. So, to play your own song, all you need do is clone this repo, plug in a new melody (and optionally bass) in 'melody.js', and have at it.
