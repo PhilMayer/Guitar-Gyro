@@ -1,12 +1,11 @@
 import {randomCircle, drawButton} from './circle';
 import {getRhythm, mapNoteToDuration} from './melody';
 import MusicPlayer from './music_player'
-import anime from 'animejs';
+import {gameOver} from './pregame';
 
 document.addEventListener("DOMContentLoaded", () => {
   const playButton = document.getElementById("play")
   playButton.addEventListener("click", () => {
-    // stopMusic();
     document.getElementById("play-button").className = "hidden";
     new Game();
   })
@@ -41,6 +40,7 @@ class Game {
 
     this.selectLevel();
     this.tempo = 120;
+    this.run = this.run.bind(this);
   }
 
   run () {
@@ -88,7 +88,8 @@ class Game {
       });
 
       if (note + 1 === rhythm.length) {
-        this.gameOver();
+        gameOver(this.stage, this.musicPlayer,
+           this.scoreboard, this.hits, this.misses, this.run);
       } else {
         this.deployNote(rhythm, note + 1);
       }
@@ -137,6 +138,11 @@ class Game {
           githubLink.cursor = "pointer";
           githubLink.x = 75;
           githubLink.y = 20;
+
+          const githubClick = new createjs.Shape();
+          githubClick.graphics.beginFill("#000").drawRect(0, 0, githubLink.getMeasuredWidth(), githubLink.getMeasuredHeight());
+          githubLink.hitArea = githubClick;
+
           this.stage.addChild(githubLink);
 
           setTimeout(() => {
@@ -150,6 +156,10 @@ class Game {
             playAgain.cursor = "pointer";
             playAgain.x = 75;
             playAgain.y = 375;
+
+            const hit = new createjs.Shape();
+        		hit.graphics.beginFill("#000").drawRect(0, 0, playAgain.getMeasuredWidth(), playAgain.getMeasuredHeight());
+        		playAgain.hitArea = hit;
             this.stage.addChild(playAgain);
           }, 200)
         }, 1000)
@@ -205,13 +215,6 @@ class Game {
 
   handleHit (circle) {
     this.hits += 1;
-    // createjs.Tween.get(circle).to({scaleX: 2, scaleY: 2}, 500);
-    //
-    // anime({
-    // targets: circle,
-    // translateX: 250
-    // });
-
     this.stage.removeChild(circle);
     this.updateScore();
   }
@@ -229,11 +232,19 @@ class Game {
     this.curAccuracy = updatedAccuracy;
   }
 
+  // drawCountdown (countNumber, color) {
+  //   const countdown = new createjs.Text(countNumber, "100px Reenie Beanie", color);
+  //   countdown.x = 180;
+  //   countdown.y = 300;
+  //   createjs.Tween.get(countdown).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
+  //   this.stage.addChild(countdown);
+  // }
+
   countdown () {
-    // document.getElementById("play-button").className = "hidden";
     document.getElementById("header").className = "hidden";
 
-    const count3 = new createjs.Text("3", "100px Reenie Beanie", "#00FF00");
+    // const count3 = this.drawCountdown("3", "#00FF00");
+    const count3 = new createjs.Text("3", "100px Reenie Beanie", "#00FFFF");
     count3.x = 180;
     count3.y = 300;
     createjs.Tween.get(count3).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
@@ -286,62 +297,52 @@ class Game {
     }, 1000)
   }
 
-  selectLevel () {
-    let tempo1
-    let tempo2
-    let tempo3
-    let tempo4
+  drawLevel (text, color) {
+    let level = new createjs.Text(text, "30px Reenie Beanie", color);
+    level.x = 100;
+    level.y = 1200;
+    level.cursor = "pointer";
 
-    tempo1 = new createjs.Text("=>Allegretto (easy)", "30px Reenie Beanie", "#00FF00");
-    tempo1.x = 100;
-    tempo1.y = 1200;
-    tempo1.cursor = "pointer";
-    tempo1.addEventListener("click", () => {
-      this.tempo = 110;
-      this.stage.removeChild(tempo1, tempo2, tempo3, tempo4)
+    const hit = new createjs.Shape();
+		hit.graphics.beginFill("#000").drawRect(0, 0, level.getMeasuredWidth(), level.getMeasuredHeight());
+		level.hitArea = hit;
+    return level;
+  }
+
+  selectLevel () {
+    let level1;
+    let level2;
+    let level3;
+    let level4;
+
+    const levelCallback = (tempo) => {
+      this.tempo = tempo;
+      this.stage.removeChild(level1, level2, level3, level4)
       this.directions();
-    })
-    createjs.Tween.get(tempo1).to({y: 300}, 400, createjs.Ease.bounceOut)
-    this.stage.addChild(tempo1)
+    }
+
+    level1 = this.drawLevel("=>Allegretto (easy)", "#00FF00")
+    level1.addEventListener("click", () => levelCallback(110));
+    createjs.Tween.get(level1).to({y: 140}, 400, createjs.Ease.bounceOut)
+    this.stage.addChild(level1)
 
     setTimeout(() => {
-      tempo2 = new createjs.Text("=>Vivace (medium)", "30px Reenie Beanie", "#00FFFF");
-      tempo2.x = 100;
-      tempo2.y = 1200;
-      tempo2.cursor = "pointer";
-      tempo2.addEventListener("click", () => {
-        this.tempo = 130;
-        this.stage.removeChild(tempo1, tempo2, tempo3, tempo4)
-        this.directions();
-      })
-      createjs.Tween.get(tempo2).to({y: 200}, 400, createjs.Ease.bounceOut)
-      this.stage.addChild(tempo2)
+      level2 = this.drawLevel("=>Vivace (medium)", "#00FFFF");
+      level2.addEventListener("click", () => levelCallback(130));
+      createjs.Tween.get(level2).to({y: 200}, 400, createjs.Ease.bounceOut)
+      this.stage.addChild(level2)
 
       setTimeout(() => {
-        tempo3 = new createjs.Text("=>Presto (hard)", "30px Reenie Beanie", "#FF0000");
-        tempo3.x = 100;
-        tempo3.y = 1200;
-        tempo3.cursor = "pointer";
-        tempo3.addEventListener("click", () => {
-          this.tempo = 170;
-          this.stage.removeChild(tempo1, tempo2, tempo3, tempo4)
-          this.directions();
-        })
-        createjs.Tween.get(tempo3).to({y: 380}, 400, createjs.Ease.bounceOut)
-        this.stage.addChild(tempo3)
+        level3 = this.drawLevel("=>Presto (hard)", "#FF0000");
+        level3.addEventListener("click", () => levelCallback(170));
+        createjs.Tween.get(level3).to({y: 260}, 400, createjs.Ease.bounceOut)
+        this.stage.addChild(level3)
 
         setTimeout(() => {
-          tempo4 = new createjs.Text("=>Prestissimo (there's just no way)", "30px Reenie Beanie", "#DC143C");
-          tempo4.x = 100;
-          tempo4.y = 1200;
-          tempo4.cursor = "pointer";
-          tempo4.addEventListener("click", () => {
-            this.tempo = 185;
-            this.stage.removeChild(tempo1, tempo2, tempo3, tempo4)
-            this.directions();
-          })
-          createjs.Tween.get(tempo4).to({y: 420}, 400, createjs.Ease.bounceOut)
-          this.stage.addChild(tempo4)
+          level4 = this.drawLevel("=>Prestissimo (there's just no way)", "#DC143C");
+          level4.addEventListener("click", () => levelCallback(185));
+          createjs.Tween.get(level4).to({y: 320}, 400, createjs.Ease.bounceOut)
+          this.stage.addChild(level4)
         }, 500)
       }, 500)
     }, 500)
