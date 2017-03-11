@@ -1,0 +1,5 @@
+#TODO
+-animate hits somehow
+-add more music
+
+"start": "webpack-dev-server --inline"

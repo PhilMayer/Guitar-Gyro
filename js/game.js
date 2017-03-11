@@ -25,9 +25,6 @@ class Game {
     })
     createjs.Ticker.setFPS(60);
 
-
-    this.hits = 0;
-    this.misses = 0;
     this.drawLetters();
     this.curAccuracy = 0;
     this.strumming = false;
@@ -40,11 +37,15 @@ class Game {
 
     this.tempo = 120;
     this.run = this.run.bind(this);
-    selectLevel(this.stage, this.tempo, this.run);
+    selectLevel(this.stage, this.run);
   }
 
-  run () {
+  run (tempo) {
+    this.tempo = tempo;
+    this.hits = 0;
+    this.misses = 0;
     this.scoreboard = this.drawScoreboard();
+
     this.musicPlayer = new MusicPlayer(this.tempo);
     this.musicPlayer.play();
     const rhythm = getRhythm();
@@ -89,7 +90,7 @@ class Game {
 
       if (note + 1 === rhythm.length) {
         gameOver(this.stage, this.musicPlayer,
-           this.scoreboard, this.hits, this.misses, this.run);
+           this.scoreboard, this.hits, this.misses, this.run, this.tempo);
       } else {
         this.deployNote(rhythm, note + 1);
       }
@@ -133,23 +134,40 @@ class Game {
       this.redPressed = true;
       this.redButton.graphics.clear()
         .beginFill("#FF0000").drawCircle(0, 0, 25, 309).endFill();
-      this.blueButton.graphics.clear()
-      this.greenButton.graphics.clear()
+      this.blueButton.graphics.clear();
+      this.greenButton.graphics.clear();
+      this.bluePressed = false;
+      this.greenPressed = false;
+
     } else if (key === 68) {
       this.bluePressed = true;
       this.blueButton.graphics.clear()
         .beginFill("#00FFFF").drawCircle(0, 0, 25, 309).endFill();
-      this.greenButton.graphics.clear()
-      this.redButton.graphics.clear()
+      this.greenButton.graphics.clear();
+      this.redButton.graphics.clear();
+      this.redPressed = false;
+      this.greenPressed = false;
+
     } else if (key === 70) {
       this.greenPressed = true;
       this.greenButton.graphics.clear()
       .beginFill("#00FF00").drawCircle(0, 0, 25, 309).endFill();
-      this.redButton.graphics.clear()
-      this.blueButton.graphics.clear()
+      this.redButton.graphics.clear();
+      this.blueButton.graphics.clear();
+
+      this.redPressed = false;
+      this.bluePressed = false;
     } else if (key === 74) {
-      this.strumming = true
+      this.strumming = true;
+
+      setTimeout(() => {
+        this.strumming = false;
+      }, 100)
     }
+  }
+
+  disableKeyPress (keyPress) {
+
   }
 
   keyReleased(e) {
@@ -176,7 +194,7 @@ class Game {
     const updatedAccuracy = this.accuracy().toString() + "%";
     this.scoreboard.text = updatedAccuracy;
 
-    if (updatedAccuracy > this.curAccuracy) {
+    if (updatedAccuracy >= this.curAccuracy) {
       this.scoreboard.color = "#00FF00"
     } else {
       this.scoreboard.color = "#FF0000"

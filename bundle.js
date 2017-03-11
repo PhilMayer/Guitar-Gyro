@@ -349,7 +349,7 @@ class MusicPlayer {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-const countdown = (stage, run) => {
+const countdown = (stage, run, tempo) => {
   document.getElementById("header").className = "hidden";
 
   // const count3 = this.drawCountdown("3", "#00FF00");
@@ -377,7 +377,7 @@ const countdown = (stage, run) => {
 
       setTimeout(() => {
         stage.removeChild(count1);
-        run();
+        run(tempo);
       }, 1000)
     }, 1000)
   }, 1000)
@@ -385,7 +385,7 @@ const countdown = (stage, run) => {
 /* unused harmony export countdown */
 
 
-const directions = (stage, run) => {
+const directions = (stage, run, tempo) => {
   const direction1 = new createjs.Text("=> Press S/D/F to hold down notes.", "60px Reenie Beanie", "#00FF00");
   direction1.x = 150;
   direction1.y = -60;
@@ -405,7 +405,7 @@ const directions = (stage, run) => {
       createjs.Tween.get(direction1).to({x: 360, y: 370, scaleX: 0.5, scaleY: 0.5}, 200)
       createjs.Tween.get(direction2).to({x: 360, y: 330, scaleX: 0.5, scaleY: 0.5}, 200)
       // stage.removeChild(direction2, direction1);
-      countdown(stage, run);
+      countdown(stage, run, tempo);
     }, 3000)
   }, 1000)
 }
@@ -424,7 +424,7 @@ const drawLevel = (text, color) => {
   return level;
 }
 
-const gameOver = (stage, musicPlayer, scoreboard, hits, misses, run) => {
+const gameOver = (stage, musicPlayer, scoreboard, hits, misses, run, tempo) => {
   setTimeout(() => {
     musicPlayer.stopMusic();
     createjs.Tween.get(scoreboard).to({x: 75, y: 500, rotation: -360},
@@ -455,7 +455,7 @@ const gameOver = (stage, musicPlayer, scoreboard, hits, misses, run) => {
             stage.removeChild(playAgain, githubLink, message, scoreboard)
             hits = 0;
             misses = 0;
-            run();
+            run(tempo);
           })
           playAgain.cursor = "pointer";
           playAgain.x = 75;
@@ -473,16 +473,17 @@ const gameOver = (stage, musicPlayer, scoreboard, hits, misses, run) => {
 /* harmony export (immutable) */ __webpack_exports__["b"] = gameOver;
 
 
-const selectLevel = (stage, gameTempo, run) => {
+const selectLevel = (stage, run) => {
   let level1;
   let level2;
   let level3;
   let level4;
+  let gameTempo;
 
   const levelCallback = (tempo) => {
-    gameTempo = tempo;
+    gameTempo = tempo
     stage.removeChild(level1, level2, level3, level4)
-    directions(stage, run);
+    directions(stage, run, gameTempo);
   }
 
   level1 = drawLevel("=>Allegretto (easy)", "#00FF00")
@@ -788,9 +789,6 @@ class Game {
     })
     createjs.Ticker.setFPS(60);
 
-
-    this.hits = 0;
-    this.misses = 0;
     this.drawLetters();
     this.curAccuracy = 0;
     this.strumming = false;
@@ -803,11 +801,15 @@ class Game {
 
     this.tempo = 120;
     this.run = this.run.bind(this);
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__pregame__["a" /* selectLevel */])(this.stage, this.tempo, this.run);
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__pregame__["a" /* selectLevel */])(this.stage, this.run);
   }
 
-  run () {
+  run (tempo) {
+    this.tempo = tempo;
+    this.hits = 0;
+    this.misses = 0;
     this.scoreboard = this.drawScoreboard();
+
     this.musicPlayer = new __WEBPACK_IMPORTED_MODULE_2__music_player__["a" /* default */](this.tempo);
     this.musicPlayer.play();
     const rhythm = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__melody__["a" /* getRhythm */])();
@@ -852,7 +854,7 @@ class Game {
 
       if (note + 1 === rhythm.length) {
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__pregame__["b" /* gameOver */])(this.stage, this.musicPlayer,
-           this.scoreboard, this.hits, this.misses, this.run);
+           this.scoreboard, this.hits, this.misses, this.run, this.tempo);
       } else {
         this.deployNote(rhythm, note + 1);
       }
@@ -896,23 +898,40 @@ class Game {
       this.redPressed = true;
       this.redButton.graphics.clear()
         .beginFill("#FF0000").drawCircle(0, 0, 25, 309).endFill();
-      this.blueButton.graphics.clear()
-      this.greenButton.graphics.clear()
+      this.blueButton.graphics.clear();
+      this.greenButton.graphics.clear();
+      this.bluePressed = false;
+      this.greenPressed = false;
+
     } else if (key === 68) {
       this.bluePressed = true;
       this.blueButton.graphics.clear()
         .beginFill("#00FFFF").drawCircle(0, 0, 25, 309).endFill();
-      this.greenButton.graphics.clear()
-      this.redButton.graphics.clear()
+      this.greenButton.graphics.clear();
+      this.redButton.graphics.clear();
+      this.redPressed = false;
+      this.greenPressed = false;
+
     } else if (key === 70) {
       this.greenPressed = true;
       this.greenButton.graphics.clear()
       .beginFill("#00FF00").drawCircle(0, 0, 25, 309).endFill();
-      this.redButton.graphics.clear()
-      this.blueButton.graphics.clear()
+      this.redButton.graphics.clear();
+      this.blueButton.graphics.clear();
+
+      this.redPressed = false;
+      this.bluePressed = false;
     } else if (key === 74) {
-      this.strumming = true
+      this.strumming = true;
+
+      setTimeout(() => {
+        this.strumming = false;
+      }, 100)
     }
+  }
+
+  disableKeyPress (keyPress) {
+
   }
 
   keyReleased(e) {
@@ -939,7 +958,7 @@ class Game {
     const updatedAccuracy = this.accuracy().toString() + "%";
     this.scoreboard.text = updatedAccuracy;
 
-    if (updatedAccuracy > this.curAccuracy) {
+    if (updatedAccuracy >= this.curAccuracy) {
       this.scoreboard.color = "#00FF00"
     } else {
       this.scoreboard.color = "#FF0000"
