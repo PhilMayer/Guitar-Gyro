@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -280,7 +280,7 @@ const drawButton = (stage, color) => {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_tinymusic__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_tinymusic__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_tinymusic___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_tinymusic__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__melody_js__ = __webpack_require__(0);
 
@@ -346,6 +346,186 @@ class MusicPlayer {
 
 /***/ }),
 /* 3 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+const countdown = (stage, run, tempo) => {
+  document.getElementById("header").className = "hidden";
+
+  // const count3 = this.drawCountdown("3", "#00FF00");
+  const count3 = new createjs.Text("3", "100px Reenie Beanie", "#00FFFF");
+  count3.x = 180;
+  count3.y = 300;
+  createjs.Tween.get(count3).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
+  stage.addChild(count3);
+
+  setTimeout(() => {
+    stage.removeChild(count3);
+    const count2 = new createjs.Text("2", "100px Reenie Beanie", "#00FFFF");
+    count2.x = 180;
+    count2.y = 300;
+    createjs.Tween.get(count2).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
+    stage.addChild(count2);
+
+    setTimeout(() => {
+      stage.removeChild(count2);
+      const count1 = new createjs.Text("1", "100px Reenie Beanie", "#FF0000");
+      count1.x = 180;
+      count1.y = 300;
+      createjs.Tween.get(count1).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
+      stage.addChild(count1);
+
+      setTimeout(() => {
+        stage.removeChild(count1);
+        run(tempo);
+      }, 1000)
+    }, 1000)
+  }, 1000)
+}
+/* unused harmony export countdown */
+
+
+const directions = (stage, run, tempo) => {
+  const direction1 = new createjs.Text("=> Press S/D/F to hold down notes.", "60px Reenie Beanie", "#00FF00");
+  direction1.x = 150;
+  direction1.y = -60;
+
+  createjs.Tween.get(direction1).to({y: 380}, 400, createjs.Ease.bounceOut)
+  stage.addChild(direction1)
+
+  setTimeout(() => {
+    const direction2 = new createjs.Text("=> Tap J to strum.", "60px Reenie Beanie", "#00FF00");
+    direction2.x = 150;
+    direction2.y = -60;
+
+    createjs.Tween.get(direction2).to({y: 300}, 400, createjs.Ease.bounceOut)
+    stage.addChild(direction2)
+
+    setTimeout(() => {
+      createjs.Tween.get(direction1).to({x: 360, y: 370, scaleX: 0.5, scaleY: 0.5}, 200)
+      createjs.Tween.get(direction2).to({x: 360, y: 330, scaleX: 0.5, scaleY: 0.5}, 200)
+      // stage.removeChild(direction2, direction1);
+      countdown(stage, run, tempo);
+    }, 3000)
+  }, 1000)
+}
+/* unused harmony export directions */
+
+
+const drawLevel = (text, color) => {
+  let level = new createjs.Text(text, "30px Reenie Beanie", color);
+  level.x = 100;
+  level.y = 1200;
+  level.cursor = "pointer";
+
+  const hit = new createjs.Shape();
+  hit.graphics.beginFill("#000").drawRect(0, 0, level.getMeasuredWidth(), level.getMeasuredHeight());
+  level.hitArea = hit;
+  return level;
+}
+
+const gameOver = (stage, musicPlayer, scoreboard, hits, misses, run, tempo) => {
+  setTimeout(() => {
+    musicPlayer.stopMusic();
+    createjs.Tween.get(scoreboard).to({x: 75, y: 500, rotation: -360},
+      700, createjs.Ease.bounceOut);
+
+    setTimeout(() => {
+      const message = new createjs.Text("You're basically Beethoven.", "30px Reenie Beanie");
+      message.x = 75;
+      message.y = 450;
+      stage.addChild(message);
+
+      setTimeout(() => {
+        const githubLink = new createjs.Text("A game by Phil Mayer => Github", "40px Reenie Beanie")
+        githubLink.addEventListener("click", () => window.open("https://github.com/PhilMayer/JSHero"))
+        githubLink.cursor = "pointer";
+        githubLink.x = 75;
+        githubLink.y = 20;
+
+        const githubClick = new createjs.Shape();
+        githubClick.graphics.beginFill("#000").drawRect(0, 0, githubLink.getMeasuredWidth(), githubLink.getMeasuredHeight());
+        githubLink.hitArea = githubClick;
+
+        stage.addChild(githubLink);
+
+        setTimeout(() => {
+          const playAgain = new createjs.Text("Play again!!", "80px Reenie Beanie", "#00FF00")
+          playAgain.addEventListener("click", () => {
+            stage.removeChild(playAgain, githubLink, message, scoreboard)
+            hits = 0;
+            misses = 0;
+            run(tempo);
+          })
+          playAgain.cursor = "pointer";
+          playAgain.x = 75;
+          playAgain.y = 100;
+
+          const hit = new createjs.Shape();
+          hit.graphics.beginFill("#000").drawRect(0, 0, playAgain.getMeasuredWidth(), playAgain.getMeasuredHeight());
+          playAgain.hitArea = hit;
+          stage.addChild(playAgain);
+        }, 200)
+      }, 1000)
+    }, 1000)
+  }, 2000)
+}
+/* harmony export (immutable) */ __webpack_exports__["b"] = gameOver;
+
+
+const selectLevel = (stage, run) => {
+  let level1;
+  let level2;
+  let level3;
+  let level4;
+  let gameTempo;
+
+  const levelCallback = (tempo) => {
+    gameTempo = tempo
+    stage.removeChild(level1, level2, level3, level4)
+    directions(stage, run, gameTempo);
+  }
+
+  level1 = drawLevel("=>Allegretto (easy)", "#00FF00")
+  level1.addEventListener("click", () => levelCallback(110));
+  createjs.Tween.get(level1).to({y: 140}, 400, createjs.Ease.bounceOut)
+  stage.addChild(level1)
+
+  setTimeout(() => {
+    level2 = drawLevel("=>Vivace (medium)", "#00FFFF");
+    level2.addEventListener("click", () => levelCallback(130));
+    createjs.Tween.get(level2).to({y: 200}, 400, createjs.Ease.bounceOut)
+    stage.addChild(level2)
+
+    setTimeout(() => {
+      level3 = drawLevel("=>Presto (hard)", "#FF0000");
+      level3.addEventListener("click", () => levelCallback(170));
+      createjs.Tween.get(level3).to({y: 260}, 400, createjs.Ease.bounceOut)
+      stage.addChild(level3)
+
+      setTimeout(() => {
+        level4 = drawLevel("=>Prestissimo (there's just no way)", "#DC143C");
+        level4.addEventListener("click", () => levelCallback(185));
+        createjs.Tween.get(level4).to({y: 320}, 400, createjs.Ease.bounceOut)
+        stage.addChild(level4)
+      }, 500)
+    }, 500)
+  }, 500)
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = selectLevel;
+
+
+  // drawCountdown (countNumber, color) {
+  //   const countdown = new createjs.Text(countNumber, "100px Reenie Beanie", color);
+  //   countdown.x = 180;
+  //   countdown.y = 300;
+  //   createjs.Tween.get(countdown).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
+  //   this.stage.addChild(countdown);
+  // }
+
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;(function ( root, factory ) {
@@ -573,7 +753,7 @@ Sequence.prototype.stop = function() {
 
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -581,7 +761,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__circle__ = __webpack_require__(1);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__melody__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__music_player__ = __webpack_require__(2);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__pregame__ = __webpack_require__(6);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__pregame__ = __webpack_require__(3);
 
 
 
@@ -609,9 +789,6 @@ class Game {
     })
     createjs.Ticker.setFPS(60);
 
-
-    this.hits = 0;
-    this.misses = 0;
     this.drawLetters();
     this.curAccuracy = 0;
     this.strumming = false;
@@ -624,11 +801,15 @@ class Game {
 
     this.tempo = 120;
     this.run = this.run.bind(this);
-    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__pregame__["a" /* selectLevel */])(this.stage, this.tempo, this.run);
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__pregame__["a" /* selectLevel */])(this.stage, this.run);
   }
 
-  run () {
+  run (tempo) {
+    this.tempo = tempo;
+    this.hits = 0;
+    this.misses = 0;
     this.scoreboard = this.drawScoreboard();
+
     this.musicPlayer = new __WEBPACK_IMPORTED_MODULE_2__music_player__["a" /* default */](this.tempo);
     this.musicPlayer.play();
     const rhythm = __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_1__melody__["a" /* getRhythm */])();
@@ -673,7 +854,7 @@ class Game {
 
       if (note + 1 === rhythm.length) {
         __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_3__pregame__["b" /* gameOver */])(this.stage, this.musicPlayer,
-           this.scoreboard, this.hits, this.misses, this.run);
+           this.scoreboard, this.hits, this.misses, this.run, this.tempo);
       } else {
         this.deployNote(rhythm, note + 1);
       }
@@ -717,23 +898,40 @@ class Game {
       this.redPressed = true;
       this.redButton.graphics.clear()
         .beginFill("#FF0000").drawCircle(0, 0, 25, 309).endFill();
-      this.blueButton.graphics.clear()
-      this.greenButton.graphics.clear()
+      this.blueButton.graphics.clear();
+      this.greenButton.graphics.clear();
+      this.bluePressed = false;
+      this.greenPressed = false;
+
     } else if (key === 68) {
       this.bluePressed = true;
       this.blueButton.graphics.clear()
         .beginFill("#00FFFF").drawCircle(0, 0, 25, 309).endFill();
-      this.greenButton.graphics.clear()
-      this.redButton.graphics.clear()
+      this.greenButton.graphics.clear();
+      this.redButton.graphics.clear();
+      this.redPressed = false;
+      this.greenPressed = false;
+
     } else if (key === 70) {
       this.greenPressed = true;
       this.greenButton.graphics.clear()
       .beginFill("#00FF00").drawCircle(0, 0, 25, 309).endFill();
-      this.redButton.graphics.clear()
-      this.blueButton.graphics.clear()
+      this.redButton.graphics.clear();
+      this.blueButton.graphics.clear();
+
+      this.redPressed = false;
+      this.bluePressed = false;
     } else if (key === 74) {
-      this.strumming = true
+      this.strumming = true;
+
+      setTimeout(() => {
+        this.strumming = false;
+      }, 100)
     }
+  }
+
+  disableKeyPress (keyPress) {
+
   }
 
   keyReleased(e) {
@@ -760,7 +958,7 @@ class Game {
     const updatedAccuracy = this.accuracy().toString() + "%";
     this.scoreboard.text = updatedAccuracy;
 
-    if (updatedAccuracy > this.curAccuracy) {
+    if (updatedAccuracy >= this.curAccuracy) {
       this.scoreboard.color = "#00FF00"
     } else {
       this.scoreboard.color = "#FF0000"
@@ -769,186 +967,6 @@ class Game {
     this.curAccuracy = updatedAccuracy;
   }
 }
-
-
-/***/ }),
-/* 5 */,
-/* 6 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-const countdown = (stage, run) => {
-  document.getElementById("header").className = "hidden";
-
-  // const count3 = this.drawCountdown("3", "#00FF00");
-  const count3 = new createjs.Text("3", "100px Reenie Beanie", "#00FFFF");
-  count3.x = 180;
-  count3.y = 300;
-  createjs.Tween.get(count3).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
-  stage.addChild(count3);
-
-  setTimeout(() => {
-    stage.removeChild(count3);
-    const count2 = new createjs.Text("2", "100px Reenie Beanie", "#00FFFF");
-    count2.x = 180;
-    count2.y = 300;
-    createjs.Tween.get(count2).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
-    stage.addChild(count2);
-
-    setTimeout(() => {
-      stage.removeChild(count2);
-      const count1 = new createjs.Text("1", "100px Reenie Beanie", "#FF0000");
-      count1.x = 180;
-      count1.y = 300;
-      createjs.Tween.get(count1).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
-      stage.addChild(count1);
-
-      setTimeout(() => {
-        stage.removeChild(count1);
-        run();
-      }, 1000)
-    }, 1000)
-  }, 1000)
-}
-/* unused harmony export countdown */
-
-
-const directions = (stage, run) => {
-  const direction1 = new createjs.Text("=> Press S/D/F to hold down notes.", "60px Reenie Beanie", "#00FF00");
-  direction1.x = 150;
-  direction1.y = -60;
-
-  createjs.Tween.get(direction1).to({y: 380}, 400, createjs.Ease.bounceOut)
-  stage.addChild(direction1)
-
-  setTimeout(() => {
-    const direction2 = new createjs.Text("=> Tap J to strum.", "60px Reenie Beanie", "#00FF00");
-    direction2.x = 150;
-    direction2.y = -60;
-
-    createjs.Tween.get(direction2).to({y: 300}, 400, createjs.Ease.bounceOut)
-    stage.addChild(direction2)
-
-    setTimeout(() => {
-      createjs.Tween.get(direction1).to({x: 360, y: 370, scaleX: 0.5, scaleY: 0.5}, 200)
-      createjs.Tween.get(direction2).to({x: 360, y: 330, scaleX: 0.5, scaleY: 0.5}, 200)
-      // stage.removeChild(direction2, direction1);
-      countdown(stage, run);
-    }, 3000)
-  }, 1000)
-}
-/* unused harmony export directions */
-
-
-const drawLevel = (text, color) => {
-  let level = new createjs.Text(text, "30px Reenie Beanie", color);
-  level.x = 100;
-  level.y = 1200;
-  level.cursor = "pointer";
-
-  const hit = new createjs.Shape();
-  hit.graphics.beginFill("#000").drawRect(0, 0, level.getMeasuredWidth(), level.getMeasuredHeight());
-  level.hitArea = hit;
-  return level;
-}
-
-const gameOver = (stage, musicPlayer, scoreboard, hits, misses, run) => {
-  setTimeout(() => {
-    musicPlayer.stopMusic();
-    createjs.Tween.get(scoreboard).to({x: 75, y: 500, rotation: -360},
-      700, createjs.Ease.bounceOut);
-
-    setTimeout(() => {
-      const message = new createjs.Text("You're basically Beethoven.", "30px Reenie Beanie");
-      message.x = 75;
-      message.y = 450;
-      stage.addChild(message);
-
-      setTimeout(() => {
-        const githubLink = new createjs.Text("A game by Phil Mayer => Github", "40px Reenie Beanie")
-        githubLink.addEventListener("click", () => window.open("https://github.com/PhilMayer/JSHero"))
-        githubLink.cursor = "pointer";
-        githubLink.x = 75;
-        githubLink.y = 20;
-
-        const githubClick = new createjs.Shape();
-        githubClick.graphics.beginFill("#000").drawRect(0, 0, githubLink.getMeasuredWidth(), githubLink.getMeasuredHeight());
-        githubLink.hitArea = githubClick;
-
-        stage.addChild(githubLink);
-
-        setTimeout(() => {
-          const playAgain = new createjs.Text("Play again!!", "80px Reenie Beanie", "#00FF00")
-          playAgain.addEventListener("click", () => {
-            stage.removeChild(playAgain, githubLink, message, scoreboard)
-            hits = 0;
-            misses = 0;
-            run();
-          })
-          playAgain.cursor = "pointer";
-          playAgain.x = 75;
-          playAgain.y = 100;
-
-          const hit = new createjs.Shape();
-          hit.graphics.beginFill("#000").drawRect(0, 0, playAgain.getMeasuredWidth(), playAgain.getMeasuredHeight());
-          playAgain.hitArea = hit;
-          stage.addChild(playAgain);
-        }, 200)
-      }, 1000)
-    }, 1000)
-  }, 2000)
-}
-/* harmony export (immutable) */ __webpack_exports__["b"] = gameOver;
-
-
-const selectLevel = (stage, gameTempo, run) => {
-  let level1;
-  let level2;
-  let level3;
-  let level4;
-
-  const levelCallback = (tempo) => {
-    gameTempo = tempo;
-    stage.removeChild(level1, level2, level3, level4)
-    directions(stage, run);
-  }
-
-  level1 = drawLevel("=>Allegretto (easy)", "#00FF00")
-  level1.addEventListener("click", () => levelCallback(110));
-  createjs.Tween.get(level1).to({y: 140}, 400, createjs.Ease.bounceOut)
-  stage.addChild(level1)
-
-  setTimeout(() => {
-    level2 = drawLevel("=>Vivace (medium)", "#00FFFF");
-    level2.addEventListener("click", () => levelCallback(130));
-    createjs.Tween.get(level2).to({y: 200}, 400, createjs.Ease.bounceOut)
-    stage.addChild(level2)
-
-    setTimeout(() => {
-      level3 = drawLevel("=>Presto (hard)", "#FF0000");
-      level3.addEventListener("click", () => levelCallback(170));
-      createjs.Tween.get(level3).to({y: 260}, 400, createjs.Ease.bounceOut)
-      stage.addChild(level3)
-
-      setTimeout(() => {
-        level4 = drawLevel("=>Prestissimo (there's just no way)", "#DC143C");
-        level4.addEventListener("click", () => levelCallback(185));
-        createjs.Tween.get(level4).to({y: 320}, 400, createjs.Ease.bounceOut)
-        stage.addChild(level4)
-      }, 500)
-    }, 500)
-  }, 500)
-}
-/* harmony export (immutable) */ __webpack_exports__["a"] = selectLevel;
-
-
-  // drawCountdown (countNumber, color) {
-  //   const countdown = new createjs.Text(countNumber, "100px Reenie Beanie", color);
-  //   countdown.x = 180;
-  //   countdown.y = 300;
-  //   createjs.Tween.get(countdown).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
-  //   this.stage.addChild(countdown);
-  // }
 
 
 /***/ })

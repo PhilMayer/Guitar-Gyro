@@ -1,4 +1,4 @@
-export const countdown = (stage, run) => {
+export const countdown = (stage, run, tempo) => {
   document.getElementById("header").className = "hidden";
 
   // const count3 = this.drawCountdown("3", "#00FF00");
@@ -26,13 +26,13 @@ export const countdown = (stage, run) => {
 
       setTimeout(() => {
         stage.removeChild(count1);
-        run();
+        run(tempo);
       }, 1000)
     }, 1000)
   }, 1000)
 }
 
-export const directions = (stage, run) => {
+export const directions = (stage, run, tempo) => {
   const direction1 = new createjs.Text("=> Press S/D/F to hold down notes.", "60px Reenie Beanie", "#00FF00");
   direction1.x = 150;
   direction1.y = -60;
@@ -52,7 +52,7 @@ export const directions = (stage, run) => {
       createjs.Tween.get(direction1).to({x: 360, y: 370, scaleX: 0.5, scaleY: 0.5}, 200)
       createjs.Tween.get(direction2).to({x: 360, y: 330, scaleX: 0.5, scaleY: 0.5}, 200)
       // stage.removeChild(direction2, direction1);
-      countdown(stage, run);
+      countdown(stage, run, tempo);
     }, 3000)
   }, 1000)
 }
@@ -69,7 +69,7 @@ const drawLevel = (text, color) => {
   return level;
 }
 
-export const gameOver = (stage, musicPlayer, scoreboard, hits, misses, run) => {
+export const gameOver = (stage, musicPlayer, scoreboard, hits, misses, run, tempo) => {
   setTimeout(() => {
     musicPlayer.stopMusic();
     createjs.Tween.get(scoreboard).to({x: 75, y: 500, rotation: -360},
@@ -100,7 +100,7 @@ export const gameOver = (stage, musicPlayer, scoreboard, hits, misses, run) => {
             stage.removeChild(playAgain, githubLink, message, scoreboard)
             hits = 0;
             misses = 0;
-            run();
+            run(tempo);
           })
           playAgain.cursor = "pointer";
           playAgain.x = 75;
@@ -116,16 +116,17 @@ export const gameOver = (stage, musicPlayer, scoreboard, hits, misses, run) => {
   }, 2000)
 }
 
-export const selectLevel = (stage, gameTempo, run) => {
+export const selectLevel = (stage, run) => {
   let level1;
   let level2;
   let level3;
   let level4;
+  let gameTempo;
 
   const levelCallback = (tempo) => {
-    gameTempo = tempo;
+    gameTempo = tempo
     stage.removeChild(level1, level2, level3, level4)
-    directions(stage, run);
+    directions(stage, run, gameTempo);
   }
 
   level1 = drawLevel("=>Allegretto (easy)", "#00FF00")
