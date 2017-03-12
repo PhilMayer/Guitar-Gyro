@@ -314,7 +314,6 @@ class MusicPlayer {
 
     this.sequence1 = new __WEBPACK_IMPORTED_MODULE_0_tinymusic___default.a.Sequence( ac, this.tempo, __WEBPACK_IMPORTED_MODULE_1__melody_js__["b" /* melody */] );
     this.sequence2 = new __WEBPACK_IMPORTED_MODULE_0_tinymusic___default.a.Sequence( ac, this.tempo, __WEBPACK_IMPORTED_MODULE_1__melody_js__["c" /* bass */] );
-    this.sequence1.smoothing = 0.1;
     this.sequence1.staccato = 0.2;
 
     this.sequence1.gain.gain.value = 1.0;
