@@ -1,10 +1,9 @@
 #Guitar Gyro
 
+##Gampeplay
 [Play Guitar Gyro][GuitarGyro]
 [GuitarGyro]: http://philmayer.github.io/Guitar-Gyro
-
-##Gampeplay
-Guitar Gyro is a browser game based on the classic home console game Guitar Hero. Players choose from among one of four difficulty levels, with each level increasing successively in tempo. Soon after the fateful decision is made, colored circles will begin descending the screen, each circle representing a single note of the melody.
+Guitar Gyro is a browser game based on the classic home console game Guitar Hero. Players choose from one of four difficulty levels, with each level increasing successively in tempo. Soon after the fateful decision is made, colored circles will begin descending the screen, each circle representing a single note of the melody.
 
 In order to "hit" a note, the player must be holding the correct note (S, D, or F keys) and strumming (J key) when the note overlaps with our "instrument" on the screen's bottom. If that was all a bit confusing, here's a gif that will hopefully clear things up a bit:
 
@@ -12,7 +11,7 @@ In order to "hit" a note, the player must be holding the correct note (S, D, or 
 
 ##Technical Details
 
-Guitar Gyro is written in plain old JavaScript, with just two classes. The first of these is the `Game` class, which does exactly what it sounds like--deploying notes downscreen, handling the logic of what happens when a player hits or doesn't hit a note, and displaying pre- and post-game messages.
+Guitar Gyro is written in JavaScript, and was built with just two classes. The first of these is the `Game` class, which does exactly what it sounds like--deploying notes downscreen, handling the logic of what happens when a player hits or doesn't hit a note, and displaying pre- and post-game messages.
 
 ###`MusicPlayer`
 The second and more interesting class is the `MusicPlayer` class, which deals with creating a tune, and then turning that tune into something that can be ready to sync with the circular note visuals.
