@@ -166,10 +166,6 @@ class Game {
     }
   }
 
-  disableKeyPress (keyPress) {
-
-  }
-
   keyReleased(e) {
     const key = e.keyCode;
     if (key === 83) {
