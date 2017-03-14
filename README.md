@@ -1,8 +1,7 @@
 # Guitar Gyro
 
 ## Gampeplay
-[Play Guitar Gyro][GuitarGyro]
-[GuitarGyro]: http://philmayer.github.io/Guitar-Gyro
+[Play Guitar Gyro](http://philmayer.github.io/Guitar-Gyro)
 
 ## Gampeplay
 Guitar Gyro is a browser game based on the classic home console game Guitar Hero. Players choose from among one of four difficulty levels, with each level increasing successively in tempo. Soon after the fateful decision is made, colored circles will begin descending the screen, each circle representing a single note of the melody.
