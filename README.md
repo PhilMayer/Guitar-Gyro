@@ -1,6 +1,6 @@
 # Guitar Gyro
 
-## Gampeplay
+## Gameplay
 [Play Guitar Gyro](http://philmayer.github.io/Guitar-Gyro)
 
 ## Gampeplay
