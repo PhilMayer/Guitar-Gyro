@@ -1,9 +1,8 @@
 # Guitar Gyro
 
-## Gameplay
 [Play Guitar Gyro](http://philmayer.github.io/Guitar-Gyro)
 
-## Gampeplay
+## Gameplay
 Guitar Gyro is a browser game based on the classic home console game Guitar Hero. Players choose from one of four difficulty levels, with each level increasing successively in tempo. Soon after the fateful decision is made, colored circles will begin descending the screen, with each circle representing a single note of the melody.
 
 In order to "hit" a note, the player must be holding the correct note (S, D, or F keys) and strumming (J key) when the note overlaps with our "instrument" on the screen's bottom. If that was all a bit confusing, here's a gif that will hopefully clear things up a bit:
