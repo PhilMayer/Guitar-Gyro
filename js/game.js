@@ -5,8 +5,11 @@ import {gameOver, countdown, directions, selectLevel} from './pregame';
 
 document.addEventListener("DOMContentLoaded", () => {
   const playButton = document.getElementById("play")
+
+
   playButton.addEventListener("click", () => {
     document.getElementById("play-button").className = "hidden";
+    // createjs.Sound.play(soundID)
     new Game();
   })
 });
@@ -78,13 +81,13 @@ class Game {
           this.updateScore();
           this.stage.removeChild(circle);
         } else if (circle.y > 840 && circle.y < 865) {
-          if (this.redPressed && this.strumming && circleColor === "red") {
-            this.handleHit(circle);
-          } else if (this.bluePressed && this.strumming && circleColor === "blue") {
-            this.handleHit(circle);
-          } else if (this.greenPressed && this.strumming && circleColor === "green") {
-            this.handleHit(circle);
-          }
+            if (this.redPressed && this.strumming && circleColor === "red") {
+              this.handleHit(circle);
+            } else if (this.bluePressed && this.strumming && circleColor === "blue") {
+              this.handleHit(circle);
+            } else if (this.greenPressed && this.strumming && circleColor === "green") {
+              this.handleHit(circle);
+            }
         }
       });
 
@@ -164,10 +167,6 @@ class Game {
         this.strumming = false;
       }, 100)
     }
-  }
-
-  disableKeyPress (keyPress) {
-
   }
 
   keyReleased(e) {

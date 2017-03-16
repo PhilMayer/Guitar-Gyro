@@ -10,8 +10,12 @@ export default class MusicPlayer {
 
   mapNoteToDuration (noteLength) {
     switch(noteLength) {
+      case "s":
+        return ((60 / this.tempo) / 4)
       case "e":
         return ((60 / this.tempo) / 2)
+      case "es":
+        return ((60 / this.tempo) / 1.5)
       case "q":
         return (60 / this.tempo)
       case "qe":
@@ -29,7 +33,6 @@ export default class MusicPlayer {
 
     this.sequence1 = new TinyMusic.Sequence( ac, this.tempo, melody );
     this.sequence2 = new TinyMusic.Sequence( ac, this.tempo, bass );
-    this.sequence1.smoothing = 0.1;
     this.sequence1.staccato = 0.2;
 
     this.sequence1.gain.gain.value = 1.0;
