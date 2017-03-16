@@ -78,6 +78,27 @@ export const melody = [
   'C3  h'
 ]
 
+// export const melody = [
+//   'F3  q',
+//   'F3  s',
+//   'F3  es',
+//   'F3  s',
+//   'F3  es',
+//   'F3  s',
+//   'F3  es',
+//
+//   'F3  q',
+//   'G3  s',
+//   'A3  e',
+//   'A3  e',
+//   'G3  e',
+//   'F3  s',
+//   'G3  s',
+//   'F3  s',
+//   'G3  e'
+// ]
+
+
 export const bass = [
   'C2  w',
 

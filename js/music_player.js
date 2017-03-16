@@ -10,8 +10,12 @@ export default class MusicPlayer {
 
   mapNoteToDuration (noteLength) {
     switch(noteLength) {
+      case "s":
+        return ((60 / this.tempo) / 4)
       case "e":
         return ((60 / this.tempo) / 2)
+      case "es":
+        return ((60 / this.tempo) / 1.5)
       case "q":
         return (60 / this.tempo)
       case "qe":
