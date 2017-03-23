@@ -1,13 +1,3 @@
-// runAnimation(0);
-// delay(1000)
-//     .then(function() {
-//         runAnimation(1);
-//         return delay(1000);
-//     })
-//     .then(function() {
-//         runAnimation(2);
-//     });
-
 function delay(interval) {
     return new Promise(function(resolve) {
         setTimeout(resolve, interval);
@@ -51,40 +41,6 @@ export const countdown = (stage, run, tempo) => {
     stage.removeChild(count1);
     run(tempo);
   })
-
-  // setTimeout(() => {
-  //   const count3 = new createjs.Text("3", "100px Reenie Beanie", "#00FFFF");
-  //   count3.x = 180;
-  //   count3.y = 300;
-  //   createjs.Tween.get(count3).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
-  //   createjs.Sound.play(countdownSound);
-  //   stage.addChild(count3);
-  //
-  //   setTimeout(() => {
-  //     stage.removeChild(count3);
-  //     const count2 = new createjs.Text("2", "100px Reenie Beanie", "#00FF00");
-  //     count2.x = 180;
-  //     count2.y = 300;
-  //     createjs.Tween.get(count2).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
-  //     createjs.Sound.play(countdownSound);
-  //     stage.addChild(count2);
-  //
-  //     setTimeout(() => {
-  //       stage.removeChild(count2);
-  //       const count1 = new createjs.Text("1", "100px Reenie Beanie", "#FF0000");
-  //       count1.x = 180;
-  //       count1.y = 300;
-  //       createjs.Tween.get(count1).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
-  //       createjs.Sound.play(countdownSound);
-  //       stage.addChild(count1);
-  //
-  //       setTimeout(() => {
-  //         stage.removeChild(count1);
-  //         run(tempo);
-  //       }, 1000)
-  //     }, 1000)
-  //   }, 1000)
-  // }, 1000)
 }
 
 export const directions = (stage, run, tempo) => {
@@ -189,34 +145,32 @@ export const selectLevel = (stage, run) => {
     directions(stage, run, gameTempo);
   }
 
-  setTimeout(() => {
+  delay(500).then(() => {
     level1 = drawLevel("=>Allegretto (easy)", "#00FF00")
     level1.addEventListener("click", () => levelCallback(110));
     createjs.Tween.get(level1).to({y: 140}, 400, createjs.Ease.bounceOut)
     stage.addChild(level1)
     createjs.Sound.play(levelDrawn)
-    setTimeout(() => {
-      createjs.Sound.play(levelDrawn)
-      level2 = drawLevel("=>Vivace (medium)", "#00FFFF");
-      level2.addEventListener("click", () => levelCallback(130));
-      createjs.Tween.get(level2).to({y: 200}, 400, createjs.Ease.bounceOut)
-      stage.addChild(level2)
-
-      setTimeout(() => {
-        createjs.Sound.play(levelDrawn)
-        level3 = drawLevel("=>Presto (hard)", "#FF0000");
-        level3.addEventListener("click", () => levelCallback(170));
-        createjs.Tween.get(level3).to({y: 260}, 400, createjs.Ease.bounceOut)
-        stage.addChild(level3)
-
-        setTimeout(() => {
-          createjs.Sound.play(levelDrawn)
-          level4 = drawLevel("=>Prestissimo (there's just no way)", "#DC143C");
-          level4.addEventListener("click", () => levelCallback(185));
-          createjs.Tween.get(level4).to({y: 320}, 400, createjs.Ease.bounceOut)
-          stage.addChild(level4)
-        }, 500)
-      }, 500)
-    }, 500)
-  }, 500)
+    return delay(500);
+  }).then(() => {
+    createjs.Sound.play(levelDrawn)
+    level2 = drawLevel("=>Vivace (medium)", "#00FFFF");
+    level2.addEventListener("click", () => levelCallback(130));
+    createjs.Tween.get(level2).to({y: 200}, 400, createjs.Ease.bounceOut)
+    stage.addChild(level2)
+    return delay(500);
+  }).then(() => {
+    createjs.Sound.play(levelDrawn)
+    level3 = drawLevel("=>Presto (hard)", "#FF0000");
+    level3.addEventListener("click", () => levelCallback(170));
+    createjs.Tween.get(level3).to({y: 260}, 400, createjs.Ease.bounceOut)
+    stage.addChild(level3)
+    return delay(500);
+  }).then(() => {
+    createjs.Sound.play(levelDrawn)
+    level4 = drawLevel("=>Prestissimo (there's just no way)", "#DC143C");
+    level4.addEventListener("click", () => levelCallback(185));
+    createjs.Tween.get(level4).to({y: 320}, 400, createjs.Ease.bounceOut)
+    stage.addChild(level4)
+  })
 }
