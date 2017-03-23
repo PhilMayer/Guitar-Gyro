@@ -373,45 +373,93 @@ class MusicPlayer {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+// runAnimation(0);
+// delay(1000)
+//     .then(function() {
+//         runAnimation(1);
+//         return delay(1000);
+//     })
+//     .then(function() {
+//         runAnimation(2);
+//     });
+
+function delay(interval) {
+    return new Promise(function(resolve) {
+        setTimeout(resolve, interval);
+    });
+}
+
 const countdown = (stage, run, tempo) => {
   document.getElementById("header").className = "hidden";
 
   const countdownSound = "countdownSound";
   createjs.Sound.registerSound("assets/shovel.mp3", countdownSound);
 
-  setTimeout(() => {
-    const count3 = new createjs.Text("3", "100px Reenie Beanie", "#00FFFF");
+  const count3 = new createjs.Text("3", "100px Reenie Beanie", "#00FFFF");
+  const count2 = new createjs.Text("2", "100px Reenie Beanie", "#00FF00");
+  const count1 = new createjs.Text("1", "100px Reenie Beanie", "#FF0000");
+
+  delay(1000).then(() => {
     count3.x = 180;
     count3.y = 300;
     createjs.Tween.get(count3).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
     createjs.Sound.play(countdownSound);
     stage.addChild(count3);
+    return delay(1000);
+  }).then(() => {
+    stage.removeChild(count3);
+    count2.x = 180;
+    count2.y = 300;
+    createjs.Tween.get(count2).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
+    createjs.Sound.play(countdownSound);
+    stage.addChild(count2);
+    return delay(1000)
+  }).then(() => {
+    stage.removeChild(count2);
+    count1.x = 180;
+    count1.y = 300;
+    createjs.Tween.get(count1).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
+    createjs.Sound.play(countdownSound);
+    stage.addChild(count1);
+    return delay(1000);
+  }).then(() => {
+    stage.removeChild(count1);
+    run(tempo);
+  })
 
-    setTimeout(() => {
-      stage.removeChild(count3);
-      const count2 = new createjs.Text("2", "100px Reenie Beanie", "#00FF00");
-      count2.x = 180;
-      count2.y = 300;
-      createjs.Tween.get(count2).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
-      createjs.Sound.play(countdownSound);
-      stage.addChild(count2);
-
-      setTimeout(() => {
-        stage.removeChild(count2);
-        const count1 = new createjs.Text("1", "100px Reenie Beanie", "#FF0000");
-        count1.x = 180;
-        count1.y = 300;
-        createjs.Tween.get(count1).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
-        createjs.Sound.play(countdownSound);
-        stage.addChild(count1);
-
-        setTimeout(() => {
-          stage.removeChild(count1);
-          run(tempo);
-        }, 1000)
-      }, 1000)
-    }, 1000)
-  }, 1000)
+  // setTimeout(() => {
+  //   const count3 = new createjs.Text("3", "100px Reenie Beanie", "#00FFFF");
+  //   count3.x = 180;
+  //   count3.y = 300;
+  //   createjs.Tween.get(count3).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
+  //   createjs.Sound.play(countdownSound);
+  //   stage.addChild(count3);
+  //
+  //   setTimeout(() => {
+  //     stage.removeChild(count3);
+  //     const count2 = new createjs.Text("2", "100px Reenie Beanie", "#00FF00");
+  //     count2.x = 180;
+  //     count2.y = 300;
+  //     createjs.Tween.get(count2).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
+  //     createjs.Sound.play(countdownSound);
+  //     stage.addChild(count2);
+  //
+  //     setTimeout(() => {
+  //       stage.removeChild(count2);
+  //       const count1 = new createjs.Text("1", "100px Reenie Beanie", "#FF0000");
+  //       count1.x = 180;
+  //       count1.y = 300;
+  //       createjs.Tween.get(count1).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
+  //       createjs.Sound.play(countdownSound);
+  //       stage.addChild(count1);
+  //
+  //       setTimeout(() => {
+  //         stage.removeChild(count1);
+  //         run(tempo);
+  //       }, 1000)
+  //     }, 1000)
+  //   }, 1000)
+  // }, 1000)
 }
 /* unused harmony export countdown */
 
