@@ -10,7 +10,7 @@ export const countdown = (stage, run, tempo) => {
   const count3 = new createjs.Text("3", "100px Reenie Beanie", "#00FFFF");
   const count2 = new createjs.Text("2", "100px Reenie Beanie", "#00FF00");
   const count1 = new createjs.Text("1", "100px Reenie Beanie", "#FF0000");
-  
+
   const countdownSound = "countdownSound";
   createjs.Sound.registerSound("assets/shovel.mp3", countdownSound);
 
@@ -42,15 +42,18 @@ const drawCount = (stage, count, prevCount) => {
 
 export const directions = (stage, run, tempo) => {
   const direction1 = new createjs.Text("=> Press S/D/F to hold down notes.", "60px Reenie Beanie", "#00FF00");
-  direction1.x = 150;
-  direction1.y = 380;
-  stage.addChild(direction1)
+  drawDirection(stage, direction1, 380);
+  // direction1.x = 150;
+  // direction1.y = 380;
+  // stage.addChild(direction1)
 
   setTimeout(() => {
     const direction2 = new createjs.Text("=> Tap J to strum.", "60px Reenie Beanie", "#00FF00");
-    direction2.x = 150;
-    direction2.y = 300;
-    stage.addChild(direction2)
+    drawDirection(stage, direction2, 300);
+    //
+    // direction2.x = 150;
+    // direction2.y = 300;
+    // stage.addChild(direction2)
 
     setTimeout(() => {
       createjs.Tween.get(direction1).to({x: 360, y: 370, scaleX: 0.5, scaleY: 0.5}, 200)
@@ -58,6 +61,12 @@ export const directions = (stage, run, tempo) => {
       countdown(stage, run, tempo);
     }, 3000)
   }, 1000)
+}
+
+const drawDirection = (stage, direction, yCoord) => {
+  direction.x = 150;
+  direction.y = yCoord;
+  stage.addChild(direction)
 }
 
 const drawLevel = (text, color) => {
