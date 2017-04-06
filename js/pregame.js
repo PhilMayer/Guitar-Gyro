@@ -7,40 +7,37 @@ function delay(interval) {
 export const countdown = (stage, run, tempo) => {
   document.getElementById("header").className = "hidden";
 
-  const countdownSound = "countdownSound";
-  createjs.Sound.registerSound("assets/shovel.mp3", countdownSound);
-
   const count3 = new createjs.Text("3", "100px Reenie Beanie", "#00FFFF");
   const count2 = new createjs.Text("2", "100px Reenie Beanie", "#00FF00");
   const count1 = new createjs.Text("1", "100px Reenie Beanie", "#FF0000");
+  
+  const countdownSound = "countdownSound";
+  createjs.Sound.registerSound("assets/shovel.mp3", countdownSound);
 
   delay(1000).then(() => {
-    count3.x = 180;
-    count3.y = 300;
-    createjs.Tween.get(count3).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
+    drawCount(stage, count3);
     createjs.Sound.play(countdownSound);
-    stage.addChild(count3);
     return delay(1000);
   }).then(() => {
-    stage.removeChild(count3);
-    count2.x = 180;
-    count2.y = 300;
-    createjs.Tween.get(count2).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
+    drawCount(stage, count2, count3);
     createjs.Sound.play(countdownSound);
-    stage.addChild(count2);
     return delay(1000)
   }).then(() => {
-    stage.removeChild(count2);
-    count1.x = 180;
-    count1.y = 300;
-    createjs.Tween.get(count1).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
+    drawCount(stage, count1, count2);
     createjs.Sound.play(countdownSound);
-    stage.addChild(count1);
     return delay(1000);
   }).then(() => {
     stage.removeChild(count1);
     run(tempo);
   })
+}
+
+const drawCount = (stage, count, prevCount) => {
+  if (prevCount) stage.removeChild(prevCount);
+  count.x = 180;
+  count.y = 300;
+  createjs.Tween.get(count).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
+  stage.addChild(count);
 }
 
 export const directions = (stage, run, tempo) => {
