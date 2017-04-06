@@ -420,17 +420,10 @@ const drawCount = (stage, count, prevCount) => {
 const directions = (stage, run, tempo) => {
   const direction1 = new createjs.Text("=> Press S/D/F to hold down notes.", "60px Reenie Beanie", "#00FF00");
   drawDirection(stage, direction1, 380);
-  // direction1.x = 150;
-  // direction1.y = 380;
-  // stage.addChild(direction1)
 
   setTimeout(() => {
     const direction2 = new createjs.Text("=> Tap J to strum.", "60px Reenie Beanie", "#00FF00");
     drawDirection(stage, direction2, 300);
-    //
-    // direction2.x = 150;
-    // direction2.y = 300;
-    // stage.addChild(direction2)
 
     setTimeout(() => {
       createjs.Tween.get(direction1).to({x: 360, y: 370, scaleX: 0.5, scaleY: 0.5}, 200)
@@ -463,6 +456,7 @@ const drawLevel = (text, color) => {
 const gameOver = (stage, musicPlayer, scoreboard, hits, misses, run, tempo) => {
   const applause = "applause";
   createjs.Sound.registerSound("assets/applause.mp3", applause);
+
   const message = new createjs.Text("You're basically Beethoven.", "30px Reenie Beanie");
   const githubLink = new createjs.Text("A game by Phil Mayer => Github", "40px Reenie Beanie")
   const playAgain = new createjs.Text("Play again!!", "80px Reenie Beanie", "#00FF00")
@@ -474,21 +468,11 @@ const gameOver = (stage, musicPlayer, scoreboard, hits, misses, run, tempo) => {
     return delay(1000);
   }).then(() => {
     createjs.Sound.play(applause);
-    message.x = 75;
-    message.y = 450;
-    stage.addChild(message);
+    drawGameOverMessage(stage, message);
     return delay(1000);
   }).then(() => {
     githubLink.addEventListener("click", () => window.open("https://github.com/PhilMayer/JSHero"))
-    githubLink.cursor = "pointer";
-    githubLink.x = 75;
-    githubLink.y = 20;
-
-    const githubClick = new createjs.Shape();
-    githubClick.graphics.beginFill("#000").drawRect(0, 0, githubLink.getMeasuredWidth(), githubLink.getMeasuredHeight());
-    githubLink.hitArea = githubClick;
-
-    stage.addChild(githubLink);
+    drawClickableArea(stage, githubLink, 20);
     return delay(200);
   }).then(() => {
     playAgain.addEventListener("click", () => {
@@ -497,18 +481,29 @@ const gameOver = (stage, musicPlayer, scoreboard, hits, misses, run, tempo) => {
       misses = 0;
       run(tempo);
     })
-    playAgain.cursor = "pointer";
-    playAgain.x = 75;
-    playAgain.y = 100;
-
-    const hit = new createjs.Shape();
-    hit.graphics.beginFill("#000").drawRect(0, 0, playAgain.getMeasuredWidth(), playAgain.getMeasuredHeight());
-    playAgain.hitArea = hit;
-    stage.addChild(playAgain);
+    drawClickableArea(stage, playAgain, 100);
   })
 }
 /* harmony export (immutable) */ __webpack_exports__["b"] = gameOver;
 
+
+const drawGameOverMessage = (stage, message) => {
+  message.x = 75;
+  message.y = 450;
+  stage.addChild(message);
+}
+
+const drawClickableArea = (stage, area, yCoord) => {
+  area.cursor = "pointer";
+  area.x = 75;
+  area.y = yCoord;
+
+  const clickArea = new createjs.Shape();
+  clickArea.graphics.beginFill("#000").drawRect(0, 0, area.getMeasuredWidth(), area.getMeasuredHeight());
+  area.hitArea = clickArea;
+
+  stage.addChild(area);
+}
 
 const selectLevel = (stage, run) => {
   let level1;
