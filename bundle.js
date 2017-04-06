@@ -441,7 +441,7 @@ const drawDirection = (stage, direction, yCoord) => {
   stage.addChild(direction)
 }
 
-const drawLevel = (text, color) => {
+const drawLevel = (text, color, stage, levelCallback, tempo, yCoord) => {
   let level = new createjs.Text(text, "30px Reenie Beanie", color);
   level.x = 100;
   level.y = 1200;
@@ -450,6 +450,11 @@ const drawLevel = (text, color) => {
   const hit = new createjs.Shape();
   hit.graphics.beginFill("#000").drawRect(0, 0, level.getMeasuredWidth(), level.getMeasuredHeight());
   level.hitArea = hit;
+
+  level.addEventListener("click", () => levelCallback(tempo));
+  createjs.Tween.get(level).to({y: yCoord}, 400, createjs.Ease.bounceOut)
+  stage.addChild(level)
+
   return level;
 }
 
@@ -506,15 +511,11 @@ const drawClickableArea = (stage, area, yCoord) => {
 }
 
 const selectLevel = (stage, run) => {
-  let level1;
-  let level2;
-  let level3;
-  let level4;
-  let gameTempo;
+  let level1, level2, level3, level4, gameTempo;
 
+  const levelDrawn = "levelDrawn";
   const levelChosen = "levelChosen";
   createjs.Sound.registerSound("assets/warning.mp3", levelChosen);
-  const levelDrawn = "levelDrawn";
   createjs.Sound.registerSound("assets/countdown.mp3", levelDrawn);
 
   const levelCallback = (tempo) => {
@@ -525,32 +526,20 @@ const selectLevel = (stage, run) => {
   }
 
   delay(500).then(() => {
-    level1 = drawLevel("=>Allegretto (easy)", "#00FF00")
-    level1.addEventListener("click", () => levelCallback(110));
-    createjs.Tween.get(level1).to({y: 140}, 400, createjs.Ease.bounceOut)
-    stage.addChild(level1)
+    level1 = drawLevel("=>Allegretto (easy)", "#00FF00", stage, levelCallback, 110, 140)
     createjs.Sound.play(levelDrawn)
     return delay(500);
   }).then(() => {
     createjs.Sound.play(levelDrawn)
-    level2 = drawLevel("=>Vivace (medium)", "#00FFFF");
-    level2.addEventListener("click", () => levelCallback(130));
-    createjs.Tween.get(level2).to({y: 200}, 400, createjs.Ease.bounceOut)
-    stage.addChild(level2)
+    level2 = drawLevel("=>Vivace (medium)", "#00FFFF", stage, levelCallback, 130, 200)
     return delay(500);
   }).then(() => {
     createjs.Sound.play(levelDrawn)
-    level3 = drawLevel("=>Presto (hard)", "#FF0000");
-    level3.addEventListener("click", () => levelCallback(170));
-    createjs.Tween.get(level3).to({y: 260}, 400, createjs.Ease.bounceOut)
-    stage.addChild(level3)
+    level3 = drawLevel("=>Presto (hard)", "#FF0000", stage, levelCallback, 170, 260)
     return delay(500);
   }).then(() => {
     createjs.Sound.play(levelDrawn)
-    level4 = drawLevel("=>Prestissimo (there's just no way)", "#DC143C");
-    level4.addEventListener("click", () => levelCallback(185));
-    createjs.Tween.get(level4).to({y: 320}, 400, createjs.Ease.bounceOut)
-    stage.addChild(level4)
+    level4 = drawLevel("=>Prestissimo (there's just no way)", "#DC143C", stage, levelCallback, 185, 320)
   })
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = selectLevel;
