@@ -158,6 +158,6 @@ export const selectLevel = (stage, run) => {
     return delay(500);
   }).then(() => {
     createjs.Sound.play(levelDrawn)
-    level4 = drawLevel("=>Prestissimo (there's just no way)", "#DC143C", stage, levelCallback, 185, 320)
+    level4 = drawLevel("=>Prestissimo (there's just no way)", "#FF6600", stage, levelCallback, 185, 320)
   })
 }
