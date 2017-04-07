@@ -373,60 +373,57 @@ class MusicPlayer {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+function delay(interval) {
+    return new Promise(function(resolve) {
+        setTimeout(resolve, interval);
+    });
+}
+
 const countdown = (stage, run, tempo) => {
   document.getElementById("header").className = "hidden";
+
+  const count3 = new createjs.Text("3", "100px Reenie Beanie", "#00FFFF");
+  const count2 = new createjs.Text("2", "100px Reenie Beanie", "#00FF00");
+  const count1 = new createjs.Text("1", "100px Reenie Beanie", "#FF0000");
 
   const countdownSound = "countdownSound";
   createjs.Sound.registerSound("assets/shovel.mp3", countdownSound);
 
-  setTimeout(() => {
-    const count3 = new createjs.Text("3", "100px Reenie Beanie", "#00FFFF");
-    count3.x = 180;
-    count3.y = 300;
-    createjs.Tween.get(count3).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
+  delay(1000).then(() => {
+    drawCount(stage, count3);
     createjs.Sound.play(countdownSound);
-    stage.addChild(count3);
-
-    setTimeout(() => {
-      stage.removeChild(count3);
-      const count2 = new createjs.Text("2", "100px Reenie Beanie", "#00FF00");
-      count2.x = 180;
-      count2.y = 300;
-      createjs.Tween.get(count2).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
-      createjs.Sound.play(countdownSound);
-      stage.addChild(count2);
-
-      setTimeout(() => {
-        stage.removeChild(count2);
-        const count1 = new createjs.Text("1", "100px Reenie Beanie", "#FF0000");
-        count1.x = 180;
-        count1.y = 300;
-        createjs.Tween.get(count1).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
-        createjs.Sound.play(countdownSound);
-        stage.addChild(count1);
-
-        setTimeout(() => {
-          stage.removeChild(count1);
-          run(tempo);
-        }, 1000)
-      }, 1000)
-    }, 1000)
-  }, 1000)
+    return delay(1000);
+  }).then(() => {
+    drawCount(stage, count2, count3);
+    createjs.Sound.play(countdownSound);
+    return delay(1000)
+  }).then(() => {
+    drawCount(stage, count1, count2);
+    createjs.Sound.play(countdownSound);
+    return delay(1000);
+  }).then(() => {
+    stage.removeChild(count1);
+    run(tempo);
+  })
 }
 /* unused harmony export countdown */
 
 
+const drawCount = (stage, count, prevCount) => {
+  if (prevCount) stage.removeChild(prevCount);
+  count.x = 180;
+  count.y = 300;
+  createjs.Tween.get(count).to({alpha: 1}, 500).to({alpha: 0}, 500).to({alpha: 1}, 500);
+  stage.addChild(count);
+}
+
 const directions = (stage, run, tempo) => {
   const direction1 = new createjs.Text("=> Press S/D/F to hold down notes.", "60px Reenie Beanie", "#00FF00");
-  direction1.x = 150;
-  direction1.y = 380;
-  stage.addChild(direction1)
+  drawDirection(stage, direction1, 380);
 
   setTimeout(() => {
     const direction2 = new createjs.Text("=> Tap J to strum.", "60px Reenie Beanie", "#00FF00");
-    direction2.x = 150;
-    direction2.y = 300;
-    stage.addChild(direction2)
+    drawDirection(stage, direction2, 300);
 
     setTimeout(() => {
       createjs.Tween.get(direction1).to({x: 360, y: 370, scaleX: 0.5, scaleY: 0.5}, 200)
@@ -438,7 +435,13 @@ const directions = (stage, run, tempo) => {
 /* unused harmony export directions */
 
 
-const drawLevel = (text, color) => {
+const drawDirection = (stage, direction, yCoord) => {
+  direction.x = 150;
+  direction.y = yCoord;
+  stage.addChild(direction)
+}
+
+const drawLevel = (text, color, stage, levelCallback, tempo, yCoord) => {
   let level = new createjs.Text(text, "30px Reenie Beanie", color);
   level.x = 100;
   level.y = 1200;
@@ -447,6 +450,11 @@ const drawLevel = (text, color) => {
   const hit = new createjs.Shape();
   hit.graphics.beginFill("#000").drawRect(0, 0, level.getMeasuredWidth(), level.getMeasuredHeight());
   level.hitArea = hit;
+
+  level.addEventListener("click", () => levelCallback(tempo));
+  createjs.Tween.get(level).to({y: yCoord}, 400, createjs.Ease.bounceOut)
+  stage.addChild(level)
+
   return level;
 }
 
@@ -454,65 +462,60 @@ const gameOver = (stage, musicPlayer, scoreboard, hits, misses, run, tempo) => {
   const applause = "applause";
   createjs.Sound.registerSound("assets/applause.mp3", applause);
 
-  setTimeout(() => {
+  const message = new createjs.Text("You're basically Beethoven.", "30px Reenie Beanie");
+  const githubLink = new createjs.Text("A game by Phil Mayer => Github", "40px Reenie Beanie")
+  const playAgain = new createjs.Text("Play again!!", "80px Reenie Beanie", "#00FF00")
+
+  delay(2000).then(() => {
     musicPlayer.stopMusic();
     createjs.Tween.get(scoreboard).to({x: 75, y: 500, rotation: -360},
       700, createjs.Ease.bounceOut);
-
-    setTimeout(() => {
-      createjs.Sound.play(applause);
-      const message = new createjs.Text("You're basically Beethoven.", "30px Reenie Beanie");
-      message.x = 75;
-      message.y = 450;
-      stage.addChild(message);
-
-      setTimeout(() => {
-        const githubLink = new createjs.Text("A game by Phil Mayer => Github", "40px Reenie Beanie")
-        githubLink.addEventListener("click", () => window.open("https://github.com/PhilMayer/JSHero"))
-        githubLink.cursor = "pointer";
-        githubLink.x = 75;
-        githubLink.y = 20;
-
-        const githubClick = new createjs.Shape();
-        githubClick.graphics.beginFill("#000").drawRect(0, 0, githubLink.getMeasuredWidth(), githubLink.getMeasuredHeight());
-        githubLink.hitArea = githubClick;
-
-        stage.addChild(githubLink);
-
-        setTimeout(() => {
-          const playAgain = new createjs.Text("Play again!!", "80px Reenie Beanie", "#00FF00")
-          playAgain.addEventListener("click", () => {
-            stage.removeChild(playAgain, githubLink, message, scoreboard)
-            hits = 0;
-            misses = 0;
-            run(tempo);
-          })
-          playAgain.cursor = "pointer";
-          playAgain.x = 75;
-          playAgain.y = 100;
-
-          const hit = new createjs.Shape();
-          hit.graphics.beginFill("#000").drawRect(0, 0, playAgain.getMeasuredWidth(), playAgain.getMeasuredHeight());
-          playAgain.hitArea = hit;
-          stage.addChild(playAgain);
-        }, 200)
-      }, 1000)
-    }, 1000)
-  }, 2000)
+    return delay(1000);
+  }).then(() => {
+    createjs.Sound.play(applause);
+    drawGameOverMessage(stage, message);
+    return delay(1000);
+  }).then(() => {
+    githubLink.addEventListener("click", () => window.open("https://github.com/PhilMayer/JSHero"))
+    drawClickableArea(stage, githubLink, 20);
+    return delay(200);
+  }).then(() => {
+    playAgain.addEventListener("click", () => {
+      stage.removeChild(playAgain, githubLink, message, scoreboard)
+      hits = 0;
+      misses = 0;
+      run(tempo);
+    })
+    drawClickableArea(stage, playAgain, 100);
+  })
 }
 /* harmony export (immutable) */ __webpack_exports__["b"] = gameOver;
 
 
-const selectLevel = (stage, run) => {
-  let level1;
-  let level2;
-  let level3;
-  let level4;
-  let gameTempo;
+const drawGameOverMessage = (stage, message) => {
+  message.x = 75;
+  message.y = 450;
+  stage.addChild(message);
+}
 
+const drawClickableArea = (stage, area, yCoord) => {
+  area.cursor = "pointer";
+  area.x = 75;
+  area.y = yCoord;
+
+  const clickArea = new createjs.Shape();
+  clickArea.graphics.beginFill("#000").drawRect(0, 0, area.getMeasuredWidth(), area.getMeasuredHeight());
+  area.hitArea = clickArea;
+
+  stage.addChild(area);
+}
+
+const selectLevel = (stage, run) => {
+  let level1, level2, level3, level4, gameTempo;
+
+  const levelDrawn = "levelDrawn";
   const levelChosen = "levelChosen";
   createjs.Sound.registerSound("assets/warning.mp3", levelChosen);
-  const levelDrawn = "levelDrawn";
   createjs.Sound.registerSound("assets/countdown.mp3", levelDrawn);
 
   const levelCallback = (tempo) => {
@@ -522,36 +525,22 @@ const selectLevel = (stage, run) => {
     directions(stage, run, gameTempo);
   }
 
-  setTimeout(() => {
-    level1 = drawLevel("=>Allegretto (easy)", "#00FF00")
-    level1.addEventListener("click", () => levelCallback(110));
-    createjs.Tween.get(level1).to({y: 140}, 400, createjs.Ease.bounceOut)
-    stage.addChild(level1)
+  delay(500).then(() => {
+    level1 = drawLevel("=>Allegretto (easy)", "#00FF00", stage, levelCallback, 110, 140)
     createjs.Sound.play(levelDrawn)
-    setTimeout(() => {
-      createjs.Sound.play(levelDrawn)
-      level2 = drawLevel("=>Vivace (medium)", "#00FFFF");
-      level2.addEventListener("click", () => levelCallback(130));
-      createjs.Tween.get(level2).to({y: 200}, 400, createjs.Ease.bounceOut)
-      stage.addChild(level2)
-
-      setTimeout(() => {
-        createjs.Sound.play(levelDrawn)
-        level3 = drawLevel("=>Presto (hard)", "#FF0000");
-        level3.addEventListener("click", () => levelCallback(170));
-        createjs.Tween.get(level3).to({y: 260}, 400, createjs.Ease.bounceOut)
-        stage.addChild(level3)
-
-        setTimeout(() => {
-          createjs.Sound.play(levelDrawn)
-          level4 = drawLevel("=>Prestissimo (there's just no way)", "#DC143C");
-          level4.addEventListener("click", () => levelCallback(185));
-          createjs.Tween.get(level4).to({y: 320}, 400, createjs.Ease.bounceOut)
-          stage.addChild(level4)
-        }, 500)
-      }, 500)
-    }, 500)
-  }, 500)
+    return delay(500);
+  }).then(() => {
+    createjs.Sound.play(levelDrawn)
+    level2 = drawLevel("=>Vivace (medium)", "#00FFFF", stage, levelCallback, 130, 200)
+    return delay(500);
+  }).then(() => {
+    createjs.Sound.play(levelDrawn)
+    level3 = drawLevel("=>Presto (hard)", "#FF0000", stage, levelCallback, 170, 260)
+    return delay(500);
+  }).then(() => {
+    createjs.Sound.play(levelDrawn)
+    level4 = drawLevel("=>Prestissimo (there's just no way)", "#DC143C", stage, levelCallback, 185, 320)
+  })
 }
 /* harmony export (immutable) */ __webpack_exports__["a"] = selectLevel;
 
@@ -803,10 +792,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 document.addEventListener("DOMContentLoaded", () => {
   const playButton = document.getElementById("play")
 
-
   playButton.addEventListener("click", () => {
     document.getElementById("play-button").className = "hidden";
-    // createjs.Sound.play(soundID)
     new Game();
   })
 });
@@ -879,11 +866,11 @@ class Game {
           this.stage.removeChild(circle);
         } else if (circle.y > 840 && circle.y < 865) {
             if (this.redPressed && this.strumming && circleColor === "red") {
-              this.handleHit(circle);
+              this.handleHit(circle, 100);
             } else if (this.bluePressed && this.strumming && circleColor === "blue") {
-              this.handleHit(circle);
+              this.handleHit(circle, 200);
             } else if (this.greenPressed && this.strumming && circleColor === "green") {
-              this.handleHit(circle);
+              this.handleHit(circle, 300);
             }
         }
       });
@@ -921,10 +908,21 @@ class Game {
     return displayAccuracy
   }
 
-  handleHit (circle) {
+  handleHit (circle, xCoord) {
     this.hits += 1;
     this.stage.removeChild(circle);
     this.updateScore();
+
+    const gyro = new createjs.Bitmap("./gyro.jpg")
+    gyro.x = xCoord;
+    gyro.y = 840;
+    this.stage.addChild(gyro);
+    gyro.scaleX = 0.17;
+    gyro.scaleY = 0.17;
+    const randomX = Math.floor(Math.random() * 1000);
+    createjs.Tween.get(gyro).to({x: randomX, y: -100, rotation: -200},
+      600);
+    // this.stage.removeChild(gyro);
   }
 
   keyPressed(e) {
@@ -934,29 +932,32 @@ class Game {
       this.redPressed = true;
       this.redButton.graphics.clear()
         .beginFill("#FF0000").drawCircle(0, 0, 25, 309).endFill();
-      this.blueButton.graphics.clear();
-      this.greenButton.graphics.clear();
+
       this.bluePressed = false;
       this.greenPressed = false;
+      this.blueButton.graphics.style = "white";
+      this.greenButton.graphics.style = "white";
 
     } else if (key === 68) {
       this.bluePressed = true;
       this.blueButton.graphics.clear()
         .beginFill("#00FFFF").drawCircle(0, 0, 25, 309).endFill();
-      this.greenButton.graphics.clear();
-      this.redButton.graphics.clear();
+
       this.redPressed = false;
       this.greenPressed = false;
+      this.redButton.graphics.style = "white";
+      this.greenButton.graphics.style = "white";
 
     } else if (key === 70) {
       this.greenPressed = true;
       this.greenButton.graphics.clear()
-      .beginFill("#00FF00").drawCircle(0, 0, 25, 309).endFill();
-      this.redButton.graphics.clear();
-      this.blueButton.graphics.clear();
+        .beginFill("#00FF00").drawCircle(0, 0, 25, 309).endFill();
 
       this.redPressed = false;
       this.bluePressed = false;
+      this.redButton.graphics.style = "white";
+      this.blueButton.graphics.style = "white";
+
     } else if (key === 74) {
       this.strumming = true;
 

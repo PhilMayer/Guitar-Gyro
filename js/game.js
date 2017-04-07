@@ -6,10 +6,8 @@ import {gameOver, countdown, directions, selectLevel} from './pregame';
 document.addEventListener("DOMContentLoaded", () => {
   const playButton = document.getElementById("play")
 
-
   playButton.addEventListener("click", () => {
     document.getElementById("play-button").className = "hidden";
-    // createjs.Sound.play(soundID)
     new Game();
   })
 });
@@ -82,11 +80,11 @@ class Game {
           this.stage.removeChild(circle);
         } else if (circle.y > 840 && circle.y < 865) {
             if (this.redPressed && this.strumming && circleColor === "red") {
-              this.handleHit(circle);
+              this.handleHit(circle, 100);
             } else if (this.bluePressed && this.strumming && circleColor === "blue") {
-              this.handleHit(circle);
+              this.handleHit(circle, 200);
             } else if (this.greenPressed && this.strumming && circleColor === "green") {
-              this.handleHit(circle);
+              this.handleHit(circle, 300);
             }
         }
       });
@@ -124,10 +122,21 @@ class Game {
     return displayAccuracy
   }
 
-  handleHit (circle) {
+  handleHit (circle, xCoord) {
     this.hits += 1;
     this.stage.removeChild(circle);
     this.updateScore();
+
+    const gyro = new createjs.Bitmap("./gyro.jpg")
+    gyro.x = xCoord;
+    gyro.y = 840;
+    this.stage.addChild(gyro);
+    gyro.scaleX = 0.17;
+    gyro.scaleY = 0.17;
+    const randomX = Math.floor(Math.random() * 1000);
+    createjs.Tween.get(gyro).to({x: randomX, y: -100, rotation: -200},
+      600);
+    // this.stage.removeChild(gyro);
   }
 
   keyPressed(e) {
@@ -137,29 +146,32 @@ class Game {
       this.redPressed = true;
       this.redButton.graphics.clear()
         .beginFill("#FF0000").drawCircle(0, 0, 25, 309).endFill();
-      this.blueButton.graphics.clear();
-      this.greenButton.graphics.clear();
+
       this.bluePressed = false;
       this.greenPressed = false;
+      this.blueButton.graphics.style = "white";
+      this.greenButton.graphics.style = "white";
 
     } else if (key === 68) {
       this.bluePressed = true;
       this.blueButton.graphics.clear()
         .beginFill("#00FFFF").drawCircle(0, 0, 25, 309).endFill();
-      this.greenButton.graphics.clear();
-      this.redButton.graphics.clear();
+
       this.redPressed = false;
       this.greenPressed = false;
+      this.redButton.graphics.style = "white";
+      this.greenButton.graphics.style = "white";
 
     } else if (key === 70) {
       this.greenPressed = true;
       this.greenButton.graphics.clear()
-      .beginFill("#00FF00").drawCircle(0, 0, 25, 309).endFill();
-      this.redButton.graphics.clear();
-      this.blueButton.graphics.clear();
+        .beginFill("#00FF00").drawCircle(0, 0, 25, 309).endFill();
 
       this.redPressed = false;
       this.bluePressed = false;
+      this.redButton.graphics.style = "white";
+      this.blueButton.graphics.style = "white";
+
     } else if (key === 74) {
       this.strumming = true;
 
