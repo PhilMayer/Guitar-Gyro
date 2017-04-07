@@ -49,8 +49,8 @@ export default class MusicPlayer {
     this.sequence2.treble.gain.value = -2;
     this.sequence2.treble.frequency.value = 1400;
 
-    this.sequence1.play( when + ( 60 / this.tempo ) * (this.tempo / 30));
-    this.sequence2.play( when + ( 60 / this.tempo ) * (this.tempo / 30));
+    this.sequence1.play(when + (60 / this.tempo) * (this.tempo / 30));
+    this.sequence2.play(when + (60 / this.tempo) * (this.tempo / 30));
   }
 
   stopMusic () {

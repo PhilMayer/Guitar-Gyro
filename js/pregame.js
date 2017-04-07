@@ -84,7 +84,7 @@ export const gameOver = (stage, musicPlayer, scoreboard, hits, misses, run, temp
   createjs.Sound.registerSound("assets/applause.mp3", applause);
 
   const message = new createjs.Text("You're basically Beethoven.", "30px Reenie Beanie");
-  const githubLink = new createjs.Text("A game by Phil Mayer => Github", "40px Reenie Beanie")
+  const githubLink = new createjs.Text("A game by Phil Mayer => Github", "40px Reenie Beanie", "#FF0000")
   const playAgain = new createjs.Text("Play again!!", "80px Reenie Beanie", "#00FF00")
 
   delay(2000).then(() => {
@@ -158,6 +158,6 @@ export const selectLevel = (stage, run) => {
     return delay(500);
   }).then(() => {
     createjs.Sound.play(levelDrawn)
-    level4 = drawLevel("=>Prestissimo (there's just no way)", "#DC143C", stage, levelCallback, 185, 320)
+    level4 = drawLevel("=>Prestissimo (there's just no way)", "#FF6600", stage, levelCallback, 185, 320)
   })
 }
