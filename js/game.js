@@ -80,11 +80,11 @@ class Game {
           this.stage.removeChild(circle);
         } else if (circle.y > 840 && circle.y < 865) {
             if (this.redPressed && this.strumming && circleColor === "red") {
-              this.handleHit(circle);
+              this.handleHit(circle, 100);
             } else if (this.bluePressed && this.strumming && circleColor === "blue") {
-              this.handleHit(circle);
+              this.handleHit(circle, 200);
             } else if (this.greenPressed && this.strumming && circleColor === "green") {
-              this.handleHit(circle);
+              this.handleHit(circle, 300);
             }
         }
       });
@@ -122,10 +122,21 @@ class Game {
     return displayAccuracy
   }
 
-  handleHit (circle) {
+  handleHit (circle, xCoord) {
     this.hits += 1;
     this.stage.removeChild(circle);
     this.updateScore();
+
+    const gyro = new createjs.Bitmap("./gyro.jpg")
+    gyro.x = xCoord;
+    gyro.y = 840;
+    this.stage.addChild(gyro);
+    gyro.scaleX = 0.17;
+    gyro.scaleY = 0.17;
+    const randomX = Math.floor(Math.random() * 1000);
+    createjs.Tween.get(gyro).to({x: randomX, y: -100, rotation: -200},
+      600);
+    // this.stage.removeChild(gyro);
   }
 
   keyPressed(e) {
