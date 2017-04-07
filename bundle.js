@@ -792,10 +792,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 document.addEventListener("DOMContentLoaded", () => {
   const playButton = document.getElementById("play")
 
-
   playButton.addEventListener("click", () => {
     document.getElementById("play-button").className = "hidden";
-    // createjs.Sound.play(soundID)
     new Game();
   })
 });
@@ -923,29 +921,32 @@ class Game {
       this.redPressed = true;
       this.redButton.graphics.clear()
         .beginFill("#FF0000").drawCircle(0, 0, 25, 309).endFill();
-      this.blueButton.graphics.clear();
-      this.greenButton.graphics.clear();
+
       this.bluePressed = false;
       this.greenPressed = false;
+      this.blueButton.graphics.style = "white";
+      this.greenButton.graphics.style = "white";
 
     } else if (key === 68) {
       this.bluePressed = true;
       this.blueButton.graphics.clear()
         .beginFill("#00FFFF").drawCircle(0, 0, 25, 309).endFill();
-      this.greenButton.graphics.clear();
-      this.redButton.graphics.clear();
+
       this.redPressed = false;
       this.greenPressed = false;
+      this.redButton.graphics.style = "white";
+      this.greenButton.graphics.style = "white";
 
     } else if (key === 70) {
       this.greenPressed = true;
       this.greenButton.graphics.clear()
-      .beginFill("#00FF00").drawCircle(0, 0, 25, 309).endFill();
-      this.redButton.graphics.clear();
-      this.blueButton.graphics.clear();
+        .beginFill("#00FF00").drawCircle(0, 0, 25, 309).endFill();
 
       this.redPressed = false;
       this.bluePressed = false;
+      this.redButton.graphics.style = "white";
+      this.blueButton.graphics.style = "white";
+
     } else if (key === 74) {
       this.strumming = true;
 
