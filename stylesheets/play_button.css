@@ -1,6 +1,6 @@
 body {
   background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("../Beethoven.jpg");
-  background-size: 1500px 900px;
+  background-size: 100%;
 }
 
 #gameCanvas {
