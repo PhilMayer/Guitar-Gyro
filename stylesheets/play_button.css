@@ -1,5 +1,10 @@
+body {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url("../Beethoven.jpg");
+  background-size: 1500px 900px;
+}
+
 #gameCanvas {
-    position: absolute;
+   position: absolute;
    top:0;
    bottom: 0;
    left: 28%;
@@ -14,7 +19,16 @@
 h1 {
   font-family: 'Reenie Beanie', cursive;
   font-size: 100px;
+  color: #FF0000;
   text-align: center;
+}
+
+h2 {
+  font-family: 'Reenie Beanie', cursive;
+  font-size: 50px;
+  color: #00FF00;
+  text-align: center;
+  padding-top: 50px;
 }
 
 .hidden {

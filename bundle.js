@@ -355,8 +355,8 @@ class MusicPlayer {
     this.sequence2.treble.gain.value = -2;
     this.sequence2.treble.frequency.value = 1400;
 
-    this.sequence1.play( when + ( 60 / this.tempo ) * (this.tempo / 30));
-    this.sequence2.play( when + ( 60 / this.tempo ) * (this.tempo / 30));
+    this.sequence1.play(when + (60 / this.tempo) * (this.tempo / 30));
+    this.sequence2.play(when + (60 / this.tempo) * (this.tempo / 30));
   }
 
   stopMusic () {
@@ -463,7 +463,7 @@ const gameOver = (stage, musicPlayer, scoreboard, hits, misses, run, tempo) => {
   createjs.Sound.registerSound("assets/applause.mp3", applause);
 
   const message = new createjs.Text("You're basically Beethoven.", "30px Reenie Beanie");
-  const githubLink = new createjs.Text("A game by Phil Mayer => Github", "40px Reenie Beanie")
+  const githubLink = new createjs.Text("A game by Phil Mayer => Github", "40px Reenie Beanie", "#FF0000")
   const playAgain = new createjs.Text("Play again!!", "80px Reenie Beanie", "#00FF00")
 
   delay(2000).then(() => {
@@ -794,6 +794,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   playButton.addEventListener("click", () => {
     document.getElementById("play-button").className = "hidden";
+    document.getElementById("play-instruction").className = "hidden";
     new Game();
   })
 });
@@ -913,16 +914,18 @@ class Game {
     this.stage.removeChild(circle);
     this.updateScore();
 
-    const gyro = new createjs.Bitmap("./gyro.jpg")
+    const gyro = new createjs.Bitmap("./17-gyro.png")
     gyro.x = xCoord;
-    gyro.y = 840;
+    gyro.y = 1000;
     this.stage.addChild(gyro);
     gyro.scaleX = 0.17;
     gyro.scaleY = 0.17;
     const randomX = Math.floor(Math.random() * 1000);
-    createjs.Tween.get(gyro).to({x: randomX, y: -100, rotation: -200},
-      600);
-    // this.stage.removeChild(gyro);
+
+    createjs.Tween.get(gyro).to({x: randomX, y: -150, rotation: -200}, 1200, createjs.Ease.circOut);
+    setTimeout(() => {
+      this.stage.removeChild(gyro);
+    }, 1500)
   }
 
   keyPressed(e) {

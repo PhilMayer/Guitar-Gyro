@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   playButton.addEventListener("click", () => {
     document.getElementById("play-button").className = "hidden";
+    document.getElementById("play-instruction").className = "hidden";
     new Game();
   })
 });
@@ -127,16 +128,18 @@ class Game {
     this.stage.removeChild(circle);
     this.updateScore();
 
-    const gyro = new createjs.Bitmap("./gyro.jpg")
+    const gyro = new createjs.Bitmap("./17-gyro.png")
     gyro.x = xCoord;
-    gyro.y = 840;
+    gyro.y = 1000;
     this.stage.addChild(gyro);
     gyro.scaleX = 0.17;
     gyro.scaleY = 0.17;
     const randomX = Math.floor(Math.random() * 1000);
-    createjs.Tween.get(gyro).to({x: randomX, y: -100, rotation: -200},
-      600);
-    // this.stage.removeChild(gyro);
+
+    createjs.Tween.get(gyro).to({x: randomX, y: -150, rotation: -200}, 1200, createjs.Ease.circOut);
+    setTimeout(() => {
+      this.stage.removeChild(gyro);
+    }, 1500)
   }
 
   keyPressed(e) {
