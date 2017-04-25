@@ -145,12 +145,12 @@ export const selectLevel = (stage, run) => {
   }
 
   delay(500).then(() => {
-    level1 = drawLevel("=>Allegretto (easy)", "#00FF00", stage, levelCallback, 110, 140)
+    level1 = drawLevel("=>Allegretto (easy)", "#00FF00", stage, levelCallback, 125, 140)
     createjs.Sound.play(levelDrawn)
     return delay(500);
   }).then(() => {
     createjs.Sound.play(levelDrawn)
-    level2 = drawLevel("=>Vivace (medium)", "#00FFFF", stage, levelCallback, 130, 200)
+    level2 = drawLevel("=>Vivace (medium)", "#00FFFF", stage, levelCallback, 140, 200)
     return delay(500);
   }).then(() => {
     createjs.Sound.play(levelDrawn)
